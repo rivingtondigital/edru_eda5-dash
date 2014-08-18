@@ -1,0 +1,72 @@
+<div class='col-sm-12 col-lg-6'>
+	<div class='formrow row' style='overflow:visible'>
+		<label class='col-sm-12'>Rules</label>
+		<div ng-repeat='rule in rules' class='col-sm-12 sub_section'>
+			<pre>{{rule}}</pre>
+			<div class='formrow'>
+				<label class='col-sm-4'>expression</label>
+				<textarea class='col-sm-8' ng-model='rule.expression'auto-size></textarea>
+			</div>
+			<div class='formrow'>
+				<label class='col-sm-4'>target</label>
+				<div class='col-sm-8'>
+					<input type='text' size='4' ng-model='rule.target'/>
+				</div>
+			</div>
+			<div class='formrow'>
+				<label class='col-sm-4'>diagnosis?</label>
+				<div class='col-sm-8'>
+					<input type='radio' ng-model='rule.diagnosis' ng-value='true' /><span>true</span><br/>
+					<input type='radio' ng-model='rule.diagnosis' ng-value='false' /><span>false</span><br/>
+					<div class='col-sm-12 diagnosis_box' ng-if='rule.diagnosis'>
+						<div class='row'>
+							<label class='col-xs-5 diagnosis_label'>diagnosis name</label>
+							<div class='col-xs-7'>
+								<input type='text' ng-model='rule.diagnosis.name' size='14'/>
+							</div>
+						</div>
+						<div class='row'>
+							<label class='col-xs-5 diagnosis_label'>finish interview</label>
+							<div class='col-xs-7'>
+								<input type='radio' ng-model='rule.endifdiagnosis' ng-value='true'/><span>yes</span>
+								<input type='radio' ng-model='rule.endifdiagnosis' ng-value='false'/><span>no</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class='formrow'>
+				<label class='col-sm-12'>trigger</label>
+				<div class='col-sm-12'>
+					<table class='table table-striped border'>
+						<tr>
+							<th>trigger</th>
+							<th>value</th>
+						</tr>
+						<tr>
+							<td><input type='text' ng-model='rule.trigger.identifier'/></td>
+							<td>
+								<input type='radio' ng-model='rule.trigger.value' ng-value='true'/><span>true</span><br/>
+								<input type='radio' ng-model='rule.trigger.value' ng-value='false'/><span>false</span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class='row'>
+				<button type='button' class='btn btn-default btn-sm' style='margin-left:10px' ng-click='delete_rule()'>
+					<span class='glyphicon glyphicon-remove button' style='color:red;'
+						tooltip='Delete Rule' tooltip-placement='right'></span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class='row'>
+		<button type='button' class='btn btn-default btn-sm'
+			ng-click='add_rule()' tooltip='Add Rule'
+			tooltip-placement='right'>
+			<span class='glyphicon glyphicon-plus button' style='color:green;float:right'></span>
+		</button>
+	</div>
+</div>

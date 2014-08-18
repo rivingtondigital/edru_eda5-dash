@@ -1,0 +1,36 @@
+<div class='col-sm-9 col-xs-12'>
+	<table >
+		<tr>
+			<th>trigger</th>
+			<th>value</th>
+		</tr>
+
+		<tr ng-repeat="trigger in trig_objs">
+			<td>
+				<input type='radio' ng-model='trigger.value' ng-value='true'/>true<br/>
+				<input type='radio' ng-model='trigger.value' ng-value='false'/>false<br/>
+			</td>
+			<td>
+				<input ng-model="trigger.name" typeahead-editable=false typeahead="trg for triggers in getTriggers($viewValue)"/>
+			</td>
+
+			<td>
+				<input ng-model="trigger.value" ng-click='setTriggerValue()' typeahead="b for bool in booleans | filter:$viewValue | limitTo:8"/>
+			</td>
+			<td>
+				<button type="button" class="btn btn-default btn-sm">
+					<span class='glyphicon glyphicon-remove button' style='color:red'></span>
+				</button>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td>
+				<button type='button' class='btn btn-default btn-sm'>
+					<span class='glyphicon glyphicon-plus'style='color:green'></span>
+				</button>
+			</td>
+		</tr>
+	</table>
+</div>

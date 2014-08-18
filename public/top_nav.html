@@ -1,0 +1,71 @@
+<div class='container-fluid'>
+	<nav class="navbar navbar-default" role="navigation" >
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse" id="top-collapse">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							Edit<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href='#'>Create New Questionnaire</a></li>
+							<li class='divider'></li>
+
+							<li class='dropdown-submenu' ng-repeat='instrument in instruments'>
+								<a href='#'>{{instrument.name}}</a>
+								<ul class='dropdown-menu'>
+									<li ng-repeat='version in instrument.versions'>
+										<a ng-click='select_version(instrument, version)'>
+											<span class='col-sm-8'>{{version.version.shortname}}</span>
+											<span class='col-sm-4'>v. {{version.version.major}}.{{version.version.minor}}</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class='dropdown'>
+						<a href='#' class='dropdown-toggle' data-toggle='dropdown'>
+							Save<span class='caret'></span>
+						</a>
+						<ul class='dropdown-menu bigenough' role='menu'>
+							<li><a href='#' ng-click='save_current()'>Save as Current</a></li>
+							<li><a href='#' ng-click='save_copy("lg")'>Save as New Version</a></li>
+						</ul>
+					</li>
+					<li><a href='#'>Preview</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</div>
+
+<script type="text/ng-template" id="myModalContent.html">
+	<form name='new_version'>
+		<div class="modal-header">
+				<h3 class="modal-title">Version Details</h3>
+		</div>
+		<div class="modal-body">
+			<div class='formrow'>
+				<label class='col-sm-4'>Name</label>
+				<input class='col-sm-8' type='text' ng-model='version.shortname' required/>
+			</div>
+			<div class='formrow'>
+				<label class='col-sm-4'>Description</label>
+				<textarea class='col-sm-8' style='margin-top:2px' ng-model='version.description' required></textarea>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="ok(new_version.$valid)">OK</button>
+				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		</div>
+	</div>
+</script>

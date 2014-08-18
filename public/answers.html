@@ -1,0 +1,48 @@
+<div class='col-sm-12 col-lg-6'>
+	<div class='formrow row' style='overflow:visible'>
+		<label class='col-sm-12'>Answers</label>
+		<div ng-repeat='answer in answers' class='col-sm-12 sub_section'>
+			<pre>{{answer}}</pre>
+			<div class='col-sm-12'>
+				<label class='col-sm-3'>text</label>
+				<input class='col-sm-9' type='text' value='{{answer.description}}'/>
+			</div>
+			<div class='col-sm-12'>
+				<label class='col-sm-3'>triggers</label>
+				<div class='col-sm-12'>
+					<table class='table table-striped border'>
+						<tr>
+							<th>trigger</th>
+							<th>value</th>
+							<th>&nbsp;</th>
+						</tr>
+						<tr ng-repeat='trigger in answer.triggers' trigger='trigger' eda-trigger></tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td>
+								<button type='button' class='btn btn-default btn-sm'
+										ng-click='add_trigger()' tooltip='Add Trigger'>
+									<span class='glyphicon glyphicon-plus button' style='color:green'></span>
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class='row'>
+				<button type='button' class='btn btn-default btn-sm' style='margin-left:10px' ng-click='delete_answer()'>
+					<span class='glyphicon glyphicon-remove button' style='color:red;'
+						tooltip='Delete Answer' tooltip-placement='right'></span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class='row'>
+		<button type='button' class='btn btn-default btn-sm'
+			ng-click='add_answer()' tooltip='Add Answer'
+			tooltip-placement='right'>
+			<span class='glyphicon glyphicon-plus button' style='color:green;float:right'></span>
+		</button>
+	</div>
+</div>

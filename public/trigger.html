@@ -1,0 +1,11 @@
+
+	<td><input type='text' ng-model='trigger.identifier'/></td>
+	<td>
+		<input type='radio' ng-model='trigger.value' ng-value='true'/><span>true</span><br/>
+		<input type='radio' ng-model='trigger.value' ng-value='false'/><span>false</span>
+	</td>
+	<td>
+		<button type='button' class='btn btn-default btn-sm' ng-click='remove_trigger($index)' tooltip='Delete Trigger'>
+			<span class='glyphicon glyphicon-remove button' style='color:red'></span>
+		</button>
+	</td>

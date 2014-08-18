@@ -1,0 +1,33 @@
+<div class="formrow">
+	<label class='col-sm-3'>Question ID</label>
+	<div class='col-sm-6'>
+		<input type=text ng-model='card.question_id' size='5'/>
+	</div>
+	<div class='col-sm-3'>
+		<button type='button' class='btn btn-default btn-sm' style='margin-left:10px;float:right;'
+			ng-click='delete_question()'>
+			<span class='glyphicon glyphicon-remove button' style='color:red;'
+				tooltip='Delete Question' tooltip-placement='left'></span>
+		</button>
+	</div>
+</div>
+<div class='formrow'>
+	<label class='col-sm-3'>Short Name</label>
+	<input type='text' ng-model='card.short_name' class='col-sm-9'/>
+</div>
+<div class="formrow">
+	<label class='col-sm-12'>Symptom Text</label>
+	<text-angular auto-size class='col-sm-12' ng-model='card.symptom_text'
+		ta-unsafe-sanitizer='true'></text-angular>
+</div>
+
+<div class='formrow'>
+	<label class='col-sm-12'>Probe</label>
+	<text-angular auto-size class='col-sm-12' ng-model='card.probe_text'
+		ta-unsafe-sanitizer='true'></text-angular>
+</div>
+
+<eda-rules rules='card.rules'></eda-rules>
+
+<eda-answers answers='card.answers'></eda-answers>
+

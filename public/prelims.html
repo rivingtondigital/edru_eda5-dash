@@ -1,0 +1,60 @@
+<div class="formrow">
+	<label class='col-sm-3'>Name</label>
+	<input class='col-sm-9' type='text' ng-model='card.name'/>
+</div>
+<div class='formrow'>
+	<label class='col-sm-3'>Version</label>
+	<div class='col-sm-9'style="
+    border: 1px solid lightgray;padding: 20px;overflow:hidden">
+		<div class='row'>
+			<div class='row'>
+				<label class='col-sm-3'>number</label>
+				<span class='col-sm-9' style='font-size:20px; color:green'>
+					{{card.version.major}}.{{card.version.minor}}
+				</span>
+			</div>
+
+			<div class='row formrow'>
+				<label class='col-sm-3'>name</label>
+				<div class='col-sm-9'>
+					<input type='text' ng-model='card.version.shortname'/>
+				</div>
+			</div>
+			<div class='row formrow'>
+				<label class='col-sm-3'>description</label>
+				<div class='col-sm-9'>
+					<textarea ng-model='card.version.description' auto-size />
+				</div>
+			</div>
+			<div>
+				<button type='button' class='btn btn-default btn-sm'
+					style='margin-left:10px;float:right;'
+					ng-click='delete_version()'>
+					<span class='glyphicon glyphicon-remove button' style='color:red;'
+						tooltip='Delete Version' tooltip-placement='left'></span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class='formrow'>
+	<label class='col-sm-12'>Description</label>
+	<text-angular auto-size class="col-sm-12" ng-model="card.description" ></text-angular>
+</div>
+
+
+<script type="text/ng-template" id="VersionDelete.html">
+	<form name='new_version'>
+		<div class="modal-header">
+				<h3 class="modal-title">Version Delete Confirmation</h3>
+		</div>
+		<div class="modal-body">
+			<h4>Are you sure that you want to delete this version?</h4>
+		</div>
+
+		<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="ok(new_version.$valid)">OK</button>
+				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		</div>
+	</div>
+</script>
