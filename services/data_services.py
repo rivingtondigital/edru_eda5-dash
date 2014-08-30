@@ -20,16 +20,12 @@ def unbson(chunk):
 
 def get_current_questionnaire(urlname):
 	questionnaires = MongoClient().dsm.questionnaires
-	quest_bson = questionnaires.find_one({
-																				'urlname': urlname,
-																				'deleted_on': None
-															})
 
-	questionnaires.find_one({
-											 'urlname':  'eda5',
+	quest_bson = questionnaires.find_one({
+											 'urlname':  urlname,
 											 'version.major': 1,
 											 'deleted_on': None
-											 }, sort=[("version.minor", DESCENDING)])['version']
+											 }, sort=[("version.minor", DESCENDING)])
 
 
 	if quest_bson != None:
@@ -46,7 +42,8 @@ def get_specific_version(major_number, questionnaire):
 									'urlname': questionnaire,
 									'version.major': int(major_number),
 									'deleted_on': None
-								})
+								}, sort=[('version.minor', DESCENDING)])
+
 	if quest_bson != None:
 		return unbson(quest_bson)
 	else:
