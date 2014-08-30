@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'eda5_manage.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 		url(r'^editor/', include('editor.urls')),
 		url(r'^ajax/', include('api.urls')),
 )

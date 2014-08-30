@@ -1,0 +1,55 @@
+<html>
+<head>
+<script type="text/javascript" src="js/external/angular.js"></script>
+<script type='text/javascript' src='js/external/angular-http-auth-master/src/http-auth-interceptor.js'></script>
+
+<script>
+(function(){
+	var app = angular.module("eda.authpage", ['http-auth-interceptor']);
+
+	var fetch_service = app.service('eda.fetch_service', function(){
+
+	});
+	var fetch_page = app.controller('FetchProtected',
+																	['$scope', '$http', 'authService', function($scope, $http, authService){
+		$scope.thing = {
+			ditto: 'hi',
+			same: 'there',
+		};
+
+		$scope.$on('event:auth-loginRequired', function() {
+			var a = 1;
+		});
+
+    $scope.restrictedAction = function() {
+      $http.post('data/protected', $scope.restrictedData).success(function(response) {
+        // this piece of code will not be executed until user is authenticated
+        $scope.restrictedContent.push(response);
+      });
+    };
+
+
+		var me = $scope;
+		authService.loginConfirmed();
+
+		var promise = $http.get('http://localhost:8000/ajax/v/hithere.json');
+		promise.success(function(data){
+			me.thing.same = 'win';
+		});
+		promise.error(function(data, err){
+			me.thing.same = 'fail';
+		});
+
+	}]);
+})();
+
+</script>
+</head>
+<body ng-app='eda.authpage'>
+	<div ng-controller='FetchProtected'>
+		{{thing.ditto}}
+		<br/>
+		{{thing.same}}
+	</div>
+</body>
+</html>

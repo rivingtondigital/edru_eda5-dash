@@ -1,7 +1,7 @@
 import json
 import re
 from datetime import datetime
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING, DESCENDING
 from bson.objectid import ObjectId
 from copy import deepcopy
 from api.models import *
@@ -24,9 +24,19 @@ def get_current_questionnaire(urlname):
 																				'urlname': urlname,
 																				'deleted_on': None
 															})
+
+	questionnaires.find_one({
+											 'urlname':  'eda5',
+											 'version.major': 1,
+											 'deleted_on': None
+											 }, sort=[("version.minor", DESCENDING)])['version']
+
+
 	if quest_bson != None:
 		quest = unbson(quest_bson)
 	return quest
+
+
 
 
 def get_specific_version(major_number, questionnaire):
@@ -61,6 +71,26 @@ def get_all_versions():
 	return versions
 
 
+def get_all_versions_flat():
+
+	questionnaires = MongoClient().dsm.questionnaires
+	versions = questionnaires.aggregate([
+							{'$match': {'deleted_on':None}},
+							{'$project': {'name': 1,
+														'_id': 1,
+														'instrument_id': 1,
+														'description': 1,
+#														'version.major': 1,
+#														'version.minor': 1,
+#														'version.shortname': 1,
+#														'version.description': 1
+													}
+							}
+						])['result']
+	versions = [unbson(x) for x in versions]
+	return versions
+
+get_all_versions_flat()
 
 
 def soft_delete_version(instrument_id):
