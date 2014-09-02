@@ -54,7 +54,7 @@ function check_dups(questions){
 
 app = angular.module('eda.instrument_service', []);
 
-	app.service('InstrumentService', ['$http', '$rootScope', function($http, $rootscope){
+	app.service('InstrumentService', ['$http','$rootScope', function($http, $rootscope){
 		var api_domain = 'http://localhost:8000/ajax/v/'
 //		var api_domain = 'http://eda5.org/api/ajax/v/'
 

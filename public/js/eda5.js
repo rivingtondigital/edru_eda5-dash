@@ -4,7 +4,9 @@
 																										 'ui.codemirror',
 																										 'eda.instrument_service',
 																										 'eda.autosize',
+																										 'eda.auth_service',
 																										 'eda.directives']);
+
 
 // 	app.controller('AllInstrumentsController', ['$scope', '$http', 'InstrumentService', function($scope, $http, InstrumentService){
 // 		this.all_instruments = InstrumentService.all_questionnaires;
@@ -30,39 +32,39 @@
 // 	}]);
 
 
-	app.controller("InstrumentController", ['$scope', '$http','$log', 'InstrumentService', function($scope, $http, $log, iService){
-		$scope.instrument = iService.current;
+//	app.controller("InstrumentController", ['$scope', '$http','$log', 'InstrumentService', function($scope, $http, $log, iService){
+// 		$scope.instrument = iService.current;
 
-		$scope.$on('change_instrument', function(){
-			$scope.instrument = iService.current;
-		});
+// 		$scope.$on('change_instrument', function(){
+// 			$scope.instrument = iService.current;
+// 		});
 
-		$scope.$on('save_version_questionnaire', function(evt){
-			var a = 1;
-			a = evt;
-		});
+// 		$scope.$on('save_version_questionnaire', function(evt){
+// 			var a = 1;
+// 			a = evt;
+// 		});
 
-		$scope.changeCard = function(card){
-			if (card == 'prelims'){
-				iService.setCard('prelims', null);
-			}
-			else{
-				iService.setCard('question', card);
-			}
-		};
+// 		$scope.changeCard = function(card){
+// 			if (card == 'prelims'){
+// 				iService.setCard('prelims', null);
+// 			}
+// 			else{
+// 				iService.setCard('question', card);
+// 			}
+// 		};
 
-		$scope.add_question = function(){
-			iService.addQuestion();
-			var qs = $('.divIndex');
-			var last = qs[qs.length - 1];
-			var qbox = $('#question_box');
-			//var scroll = last.offsetTop + last.offsetHeight;
-			//var scroll = $('#question_box')[0].scrollHeight;
-			//$('#question_box').scrollTop(1E10);
-			qbox.animate({"scrollTop": $('#question_box')[0].scrollHeight}, "slow");
-		};
+// 		$scope.add_question = function(){
+// 			iService.addQuestion();
+// 			var qs = $('.divIndex');
+// 			var last = qs[qs.length - 1];
+// 			var qbox = $('#question_box');
+// 			//var scroll = last.offsetTop + last.offsetHeight;
+// 			//var scroll = $('#question_box')[0].scrollHeight;
+// 			//$('#question_box').scrollTop(1E10);
+// 			qbox.animate({"scrollTop": $('#question_box')[0].scrollHeight}, "slow");
+// 		};
 
-	}]);
+//	}]);
 
 	app.controller('CardController', ['$scope', 'InstrumentService', function($scope, iService){
 

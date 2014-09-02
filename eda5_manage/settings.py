@@ -40,6 +40,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+		'api_auth.middleware.WebTokenMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 		'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',

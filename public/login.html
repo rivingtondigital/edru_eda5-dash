@@ -1,0 +1,24 @@
+<div class='container-fluid'>
+	<div class='loginbox'>
+		<form name='login'>
+			<div class='row' style='margin-bottom:15px'>
+				<label class='col-xs-6'>User Name</label>
+				<input type='text' class='col-xs-6' ng-model='auth.username' required/>
+			</div>
+
+			<div class='row'>
+				<label class='col-xs-6'>Password</label>
+				<input type='password' class='col-xs-6' ng-model='auth.password'required/>
+			</div>
+
+			<div class='row'>
+				<button class="btn btn-primary"
+					style='float: right;margin: 10px;'
+					ng-click="submit_login(login.$valid)">OK</button>
+			</div>
+		</form>
+			<div ng-show='authfailure'>
+				<span>Authorization failed. Please login again.</span>
+			</div>
+	</div>
+</div>

@@ -1,7 +1,81 @@
 
 app = angular.module('eda.directives', ['eda.instrument_service',
+																				'eda.auth_service',
 																				'ui.codemirror',
 																				'textAngular']);
+
+
+app.directive('edaLogin', ['AuthService', function(authservice){
+	return {
+		restrict: 'E',
+		templateUrl: 'login.html',
+		scope: {},
+		link: function(scope, ele, attr){
+			scope.submit_login = function(is_valid){
+				if (is_valid == true){
+					authservice.authenticate(scope.auth);
+				}
+			};
+
+			scope.$on('authfailure', function(){
+				scope.authfailure = true;
+			});
+
+
+		}
+	}
+}]);
+
+app.directive('edaInstrument', ['$modal', 'InstrumentService', function($modal, iService){
+	return{
+		restrict: 'E',
+		templateUrl: 'instrument.html',
+		config: function(scope){
+			iService.setCard('prelims', null);
+		}
+	}
+
+}]);
+
+app.directive('edaSidebar', ['$modal', 'InstrumentService', function($modal, iService){
+	return{
+		restrict: 'E',
+		templateUrl: 'sidebar.html',
+		link: function(scope, element, attrs){
+			scope.instrument = iService.current;
+
+			scope.changeCard = function(card){
+				if (card == 'prelims'){
+					iService.setCard('prelims', null);
+				}
+				else{
+					iService.setCard('question', card);
+				}
+			};
+
+			scope.add_question = function(){
+				iService.addQuestion();
+				var qs = $('.divIndex');
+				var last = qs[qs.length - 1];
+				var qbox = $('#question_box');
+				qbox.animate({"scrollTop": $('#question_box')[0].scrollHeight}, "slow");
+			};
+
+
+			scope.$on('change_instrument', function(){
+				scope.instrument = iService.current;
+			});
+
+			scope.$on('save_version_questionnaire', function(evt){
+				var a = 1;
+				a = evt;
+			});
+
+		}
+
+	};
+
+}]);
 
 app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservice){
 	return{
@@ -97,19 +171,24 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 				return promise;
 			}
 
-			scope.$on('change_card', function(evt){
-				newscope = evt.currentScope;
-				getTemplate(newscope.cardtype)
+			var setCard = function(){
+				getTemplate(scope.cardtype)
 					.success(function(data){
 						var template = angular.element(data);
 						var comper = $compile(template);
-						var ele = comper(newscope);
+						var ele = comper(scope);
 						$('div[cardtype]').children().remove();
 						element.append(ele);
 					})
 					.error(function(data, status, headers, config){
 						debugger;
 					});
+			}
+			setCard();
+
+
+			scope.$on('change_card', function(){
+				setCard();
 			});
 
 			scope.delete_question = function(){

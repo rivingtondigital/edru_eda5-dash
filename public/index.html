@@ -8,6 +8,7 @@
 
 		<script type="text/javascript" src="js/eda5.js"></script>
 		<script type="text/javascript" src="js/services/InstrumentService.js"></script>
+		<script type="text/javascript" src="js/services/AuthService.js"></script>
 		<script type="text/javascript" src="js/directives/autosize.js"></script>
 		<script type="text/javascript" src="js/directives/eda_directives.js"></script>
 
@@ -22,6 +23,7 @@
 		<script type='text/javascript' src='js/external/CodeMirror-master/lib/codemirror.js'></script>
 
 		<script type='text/javascript' src='js/external/angular-http-auth-master/src/http-auth-interceptor.js'></script>
+		<script type='text/javascript' src='js/external/base64.js'></script>
 
 		<link rel="stylesheet" type="text/css" href="css/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/font-awesome-4.1.0/css/font-awesome.min.css" />
@@ -175,6 +177,17 @@
 				width: 300px;
 			}
 
+			.loginbox{
+				width: 400px;
+				background-color: white;
+				border-radius: 7px;
+				padding: 30px;
+				padding-bottom:10px;
+				margin: auto;
+				margin-top: 100px;
+				border: 1px solid gray;
+			}
+
 
 .dropdown-submenu{position:relative;}
 .dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
@@ -187,45 +200,8 @@
   </head>
 
   <body>
-
-		<eda-nav></eda-nav>
-
-		<div class='container-fluid'>
-			<div class='col-sm-3'>
-				<div class='bar index-bar'>
-					<form ng-controller="InstrumentController as ictrl">
-						<div>
-							<h2>{{ instrument.name }}</h2>
-							<div class='divIndex' ng-click='changeCard("prelims")'>
-								<span class='col-sm-4 col-lg-3 col-xl-2 label label-default'>0</span>
-								<span class='col-sm-8 col-lg-9 col-xl-10 button button-default'>Preliminaries</span>
-							</div>
-							<h3>Questions</h3>
-							<button type='button' class='btn btn-default btn-sm'
-									ng-click='add_question()' tooltip='Add Question'>
-								<span class='glyphicon glyphicon-plus button' style='color:green'></span>
-							</button>
-							<div class='fixed-height' id='question_box'>
-								<div class='divIndex' ng-repeat='question in instrument.questions'
-												ng-click='changeCard(question)'>
-									<span class='col-sm-4 col-lg-3 col-xl-2 label label-default'>{{ question.question_id }}</span>
-									<span class='col-sm-8 col-lg-9 col-xl-10 button button-default'>{{ question.short_name }}</span>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-
-			<div class='col-sm-9'>
-				<div  class='bar work-bar'>
-					<form ng-controller='CardController as cControl'>
-						<eda-card cardtype='cardtype' card='card'></eda-card>
-					</form>
-				</div>
-			</div>
-
-		</div>
+		<eda-login ng-hide='authenticated'></eda-login>
+		<eda-instrument ng-if='authenticated'></eda-instrument>
 	</body>
 	<eda-error></eda-error>
 	<script type="text/ng-template" id="error.html">
