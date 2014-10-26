@@ -3,7 +3,8 @@ app = angular.module('eda.auth_service', []);
 app.service('AuthService', ['$rootScope','$http',
 										function($rootScope, $http){
 	var me = this;
-	var auth_server = 'http://localhost:8000/auth/'
+//	var auth_server = 'http://localhost:8000/auth/'
+	var auth_server = 'http://eda5.org/api/auth/'
 	me.auth = {
 		username: null,
 		password: null
