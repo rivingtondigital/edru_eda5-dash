@@ -88,7 +88,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 
 			scope.save_current = function(){
 				(scope, element, attrs, controller);
-				scope.$broadcast('save_current_questionnaire');
+				scope.$emit('save_current_questionnaire');
 			};
 
 			iaservice.fetch_all_questionnaires();
