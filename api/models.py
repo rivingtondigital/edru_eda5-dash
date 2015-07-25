@@ -86,7 +86,7 @@ class Version(EdaModel):
 		self.description = None
 		self.major = None
 		self.minor = None
-
+		self.default = None
 		super(Version, self).__init__(**kwargs)
 
 	def getUrlName(self):
@@ -210,6 +210,29 @@ class Instrument(EdaModel):
 		self.description = None
 		self.questions = []
 		super(Instrument, self).__init__(**kwargs)
+
+	def make_default(self, value):
+		insts = MongoClient().dsm.questionnaires
+		from pprint import pprint
+
+		print 'version', self.version.__dict__
+		print 'version default', value
+		if value == True:
+			resp = insts.aggregate([
+					{'$match': {'instrument_id': self.instrument_id,
+								'version.major': self.version.major,
+								}},
+					{'$project': {'_id': 0, 'name':1, 'version.major': 1, 'version.minor':1, 'version.default': 1},
+				}
+			])['result']
+			pprint(resp)
+
+			insts.update({'instrument_id': self.instrument_id, 'version.major': self.version.major}, {'$set': {'version.default': False} }, multi=True)
+			self.version.default = True
+		else:
+			insts.update({'instrument_id': self.instrument_id, 'version.major': self.version.major, 'version.minor': {'$ne': self.version.minor}}, {'$set': {'version.default': False} }, multi=False)
+			self.version.default = False
+
 
 	@classmethod
 	def fromstore(cls, js):

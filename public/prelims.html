@@ -8,6 +8,12 @@
     border: 1px solid lightgray;padding: 20px;overflow:hidden">
 		<div class='row'>
 			<div class='row'>
+				<label class='col-sm-3'>default</label>
+				<div class='col-sm-9'>
+					<input type="checkbox" ng-model='card.version.default'/>
+				</div>
+			</div>
+			<div class='row'>
 				<label class='col-sm-3'>number</label>
 				<span class='col-sm-9' style='font-size:20px; color:green'>
 					{{card.version.major}}.{{card.version.minor}}

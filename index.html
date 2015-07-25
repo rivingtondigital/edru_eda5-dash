@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+
+<html ng-app="eda.instrument_editor">
+  <head>
+		<script type="text/javascript" src="js/external/angular.js"></script>
+
+		<script type="text/javascript" src="js/eda5.js"></script>
+		<script type="text/javascript" src="js/services/InstrumentService.js"></script>
+		<script type="text/javascript" src="js/services/AuthService.js"></script>
+		<script type="text/javascript" src="js/directives/autosize.js"></script>
+		<script type="text/javascript" src="js/directives/eda_directives.js"></script>
+
+		<script type="text/javascript" src="js/external/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/external/bootstrap/js/bootstrap.min.js"></script>
+		<script type='text/javascript' src='js/external/ui-bootstrap-tpls-0.11.0.js'></script>
+		<script type='text/javascript' src='js/external/textAngular-1.2.2/src/textAngular-sanitize.js'></script>
+		<script type='text/javascript' src='js/external/textAngular-1.2.2/src/textAngularSetup.js'></script>
+
+		<script type='text/javascript' src='js/external/textAngular-1.2.2/src/textAngular.js'></script>
+		<script type='text/javascript' src='js/external/ui-codemirror-master/src/ui-codemirror.js'></script>
+		<script type='text/javascript' src='js/external/CodeMirror-master/lib/codemirror.js'></script>
+
+		<script type='text/javascript' src='js/external/angular-http-auth-master/src/http-auth-interceptor.js'></script>
+		<script type='text/javascript' src='js/external/base64.js'></script>
+
+		<link rel="stylesheet" type="text/css" href="css/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/font-awesome-4.1.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="js/external/CodeMirror-master/lib/codemirror.css" />
+
+		<style>
+			body{
+				background-color: lightgrey;
+
+
+			}
+			h2,h3{
+				color: #8c510a;
+			}
+
+			textarea,input{
+				font-size: 20px;
+			}
+
+			input[type='radio'] + span{
+				font-size:20px;
+				margin: 0px 5px;
+			}
+
+			.index-bar{
+
+			}
+
+			.index-bar ul{
+				list-style-type: none;
+			}
+
+			.index-bar li{
+				margin: 3px auto;
+			}
+
+			.bar{
+				margin: 10px auto;
+				background-color: white;
+				border-radius: 4px;
+				padding: 10px;
+				border: 1px solid black;
+				overflow: auto;
+			}
+
+			.card{
+				padding: 10px;
+				margin: 10px auto;
+				font-family: "Helvetica Neue", HelveticaNeue, "Helvetica-Neue", Helvetica, "BBAlpha Sans", sans-serif;
+			}
+			.card p{
+				font-weight: normal;
+				font-size: 1.3em;
+			}
+
+			.nav{
+				font-size:20px;
+			}
+
+			.navbar{
+				border: 1px solid black;
+				margin-top: 5px;
+			}
+
+			.dropdown-menu{
+				font-size:20px;
+			}
+
+			.divIndex{
+				margin: 10px auto;
+				overflow: hidden;
+				border: 1px solid lightgray;
+				padding: 5px;
+				cursor: pointer;
+			}
+
+			.divIndex.clicked{
+				background-color: cornflowerblue;
+				color: white;
+				font-weight: bold;
+
+			}
+
+			.formrow{
+				padding-top:10px;
+				margin: 20px auto;
+				overflow: auto;
+			}
+
+			.formrow label{
+				color: #8c510a;
+				font-size: 20px;
+			}
+
+			.fixed-height{
+				height: 770px;
+				overflow-y: scroll;
+			}
+
+			.sub_section{
+				border: 1px solid lightgray;
+				margin-bottom: 5px;
+				padding-top: 5px;
+				padding-bottom: 5px;
+			}
+
+			textarea{
+				resize: vertical;
+			}
+
+			.small-formrow{
+				margin-top: 2px;
+				margin-bottom: 2px;
+			}
+
+			.trigger_row{
+				margin: 5px auto;
+				border-top: 1px solid lightgray;
+				padding-top: 5px;
+				padding-bottom: 5px;
+			}
+			/*
+			table {border-spacing: 2px;}
+			td,th   {padding: 6px;}
+			*/
+			.cell{
+				border: 1px solid lightgray;
+				margin:3px;
+			}
+
+			.border{
+				border:1px solid lightgray;
+			}
+
+			.diagnosis_box{
+				border: 1px solid lightgray;
+				padding: 5px;
+				margin-top: 8px;
+			}
+
+			.diagnosis_box label{
+				font-size:15px !important;
+			}
+
+			.row  .row {
+				margin: 0px -15px;
+			}
+
+			.dropdown-menu>li>a{
+				overflow:auto;
+				width: 300px;
+			}
+
+			.loginbox{
+				width: 400px;
+				background-color: white;
+				border-radius: 7px;
+				padding: 30px;
+				padding-bottom:10px;
+				margin: auto;
+				margin-top: 100px;
+				border: 1px solid gray;
+			}
+
+
+.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+.dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+		</style>
+  </head>
+
+  <body>
+		<eda-login ng-hide='authenticated'></eda-login>
+		<eda-instrument ng-if='authenticated'></eda-instrument>
+	</body>
+	<eda-error></eda-error>
+	<script type="text/ng-template" id="error.html">
+
+			<div class="modal-header">
+					<h3 class="modal-title">{{error.title}}</h3>
+			</div>
+			<div class="modal-body">
+					<span class='err_message'> {{error.message}} </span>
+					<br/><hr/>
+					<h4>Details:</h4>
+					<span class='err_deets'> {{error.details}} </span>
+			</div>
+		</div>
+	</script>
+
+</html>
+

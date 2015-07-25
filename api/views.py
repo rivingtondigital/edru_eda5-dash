@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_cookie
 
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
 def get_versions_list(request):
 	ret = HttpResponse(content_type='application/json')
 	callback = request.GET['callback']
@@ -17,7 +17,7 @@ def get_versions_list(request):
 	ret.content = callback+'('+ json.dumps(versions) +')'
 	return ret
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
 def get_versions_list_flat(request):
 	ret = HttpResponse(content_type='application/json')
 	callback = request.GET['callback']
@@ -26,7 +26,7 @@ def get_versions_list_flat(request):
 	return ret
 
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
 def get_current(request, q_name):
 	ret = HttpResponse(content_type='application/json')
 	quest = ds.get_current_questionnaire(q_name)
@@ -35,7 +35,7 @@ def get_current(request, q_name):
 	return ret
 
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
 def get_major_version(request, major, q_name):
 	ret = HttpResponse(content_type='application/json')
 	print major, q_name
@@ -45,17 +45,18 @@ def get_major_version(request, major, q_name):
 	return ret
 
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
 def save_instrument(request, versiontype):
 	body = json.loads(request.body)
 	eda5 = Instrument.frombson(body['questionnaire'])
+	eda5.make_default(eda5.version.default)
 	eda5.save(versiontype)
 	resp = HttpResponse(content_type='application/json')
 	resp.content = eda5.version.tojson()
 	return resp
 
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
 def delete_questionnaire_version(request, instrument_id):
 	resp = HttpResponse(content_type='application/json')
 	ds.soft_delete_version(instrument_id)

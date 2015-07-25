@@ -20,7 +20,6 @@ def unbson(chunk):
 
 def get_current_questionnaire(urlname):
 	questionnaires = MongoClient().dsm.questionnaires
-
 	quest_bson = questionnaires.find_one({
 											 'urlname':  urlname,
 											 'version.major': 1,
