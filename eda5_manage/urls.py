@@ -12,5 +12,5 @@ urlpatterns = patterns('',
 		url(r'^auth/', include('api_auth.urls')),
 		url(r'^editor/', include('editor.urls')),
 		url(r'^ajax/', include('api.urls')),
-
+		url(r'', include('tokenapi.urls')),
 )

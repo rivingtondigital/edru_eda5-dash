@@ -58,6 +58,9 @@ class EdaModel(object):
 		ret = cls()
 		for key in js.keys():
 			if hasattr(ret, key):
+				it = js[key]
+				if type(it) == str:
+					it.replace("','", ' ')
 				setattr(ret, key, js[key])
 		if hasattr(ret, '_id'):
 			ret._id = ObjectId()

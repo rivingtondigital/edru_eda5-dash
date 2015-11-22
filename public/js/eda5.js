@@ -67,7 +67,7 @@
 //	}]);
 
 	app.controller('CardController', ['$scope', 'InstrumentService', function($scope, iService){
-
+	
 		$scope.instrument = iService.current;
 		$scope.cardtype = iService.cardtype;
 		$scope.card = iService.card;
@@ -117,6 +117,13 @@
 			},
 		};
 	}]);
+	
+	app.filter('json_expand', function(){
+		return function(input){
+			return JSON.stringify(input, null, 4);
+		};
+	});
+
 
 })();
 

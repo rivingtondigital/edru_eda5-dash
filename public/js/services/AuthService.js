@@ -4,7 +4,7 @@ app.service('AuthService', ['$rootScope','$http',
 										function($rootScope, $http){
 	var me = this;
 //	var auth_server = 'http://localhost:8000/auth/'
-	var auth_server = 'http://eda5.org/api/auth/'
+	var auth_server = 'https://interview.eda5.org/api/auth/'
 	me.auth = {
 		username: null,
 		password: null

@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tokenapi',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -117,6 +118,7 @@ TEMPLATE_DIRS = (
 
 AUTHENTICATION_BACKENDS = (
 	'django.contrib.auth.backends.ModelBackend',
+	'tokenapi.backends.TokenBackend',
 )
 
 
