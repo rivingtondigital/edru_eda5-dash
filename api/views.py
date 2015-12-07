@@ -2,15 +2,19 @@ from models import *
 from services import data_services as ds
 from pprint import pprint
 import json
+import logging
 
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_cookie
 
+logger = logging.getLogger(__name__)
+
 
 @ensure_csrf_cookie
 def get_versions_list(request):
+        logger.debug('calling get_version_list')        
 	ret = HttpResponse(content_type='application/json')
 	callback = request.GET['callback']
 	versions = ds.get_all_versions()

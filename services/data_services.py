@@ -17,9 +17,10 @@ def unbson(chunk):
 			chunk[key] = str(value)
 	return chunk
 
+client = MongoClient('mongo')
 
 def get_current_questionnaire(urlname):
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 
 	quest_bson = questionnaires.find_one({
 											 'urlname':  urlname,
@@ -36,7 +37,7 @@ def get_current_questionnaire(urlname):
 
 
 def get_specific_version(major_number, questionnaire):
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 
 	quest_bson = questionnaires.find_one({
 									'urlname': questionnaire,
@@ -51,7 +52,7 @@ def get_specific_version(major_number, questionnaire):
 
 
 def get_all_versions():
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 	versions = questionnaires.aggregate([
 									{'$match':{'deleted_on': None}},
 									 {'$group':{
@@ -70,7 +71,7 @@ def get_all_versions():
 
 def get_all_versions_flat():
 
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 	versions = questionnaires.aggregate([
 							{'$match': {'deleted_on':None}},
 							{'$project': {'name': 1,
@@ -91,7 +92,7 @@ get_all_versions_flat()
 
 
 def soft_delete_version(instrument_id):
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 	questionnaires.update(
 												{'_id': ObjectId(instrument_id)},
 												{
@@ -107,7 +108,7 @@ def update_minor_versions(major, minor):
 	print 'except version: ', minor
 	print '************************'
 
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 	questionnaires.update(
 								{
 									'version.major': int(major),

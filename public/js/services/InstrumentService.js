@@ -56,7 +56,7 @@ app = angular.module('eda.instrument_service', []);
 
 	app.service('InstrumentService', ['$http','$rootScope', function($http, $rootscope){
 //		var api_domain = 'http://localhost:8000/ajax/v/'
-		var api_domain = 'https://interview.eda5.org/api/ajax/v/'
+		var api_domain = '/api/ajax/v/'
 
 		this.init = function(){
 			this.current = {
