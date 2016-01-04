@@ -1,11 +1,14 @@
 (function(){
-	var app = angular.module("eda.instrument_editor", ['ui.bootstrap',
-																										 'textAngular',
-																										 'ui.codemirror',
-																										 'eda.instrument_service',
-																										 'eda.autosize',
-																										 'eda.auth_service',
-																										 'eda.directives']);
+	var app = angular.module("eda.instrument_editor",
+	[
+        'ui.bootstrap',
+        'textAngular',
+        'ui.codemirror',
+        'eda.instrument_service',
+        'eda.autosize',
+        'eda.auth_service',
+        'eda.directives'
+    ]);
 
 
 // 	app.controller('AllInstrumentsController', ['$scope', '$http', 'InstrumentService', function($scope, $http, InstrumentService){
@@ -124,8 +127,65 @@
 		};
 	});
 
+//	var addTransformRequest = function(data, headersGetter){
+//	    var headers = headersGetter();
+//	    headers['AuthToken'] = 'blablbabl';
+//	};
+
+	app.factory('authInterceptor', function($q, $rootScope){
+	    var scope = $rootScope;
+        return {
+            'request': function(config){
+//               config.transformRequest.push(addTransformRequest);
+                if (localStorage.getItem('AuthToken') == null){
+                    scope.authenticated = false;
+                }
+                config.headers['AuthToken'] = localStorage.getItem('AuthToken');
+//                console.info(config);
+                return config;
+            },
+            'requestError': function(rejection){
+                console.info(rejection);
+//                scope.authenticated = false;
+            },
+            'response': function(response){
+                console.info('response');
+                console.info(response.status);
+                return response;
+            },
+            'responseError': function(rejection){
+                console.info('responseError');
+                console.info(rejection);
+                console.info(scope.retry);
+                if (rejection.status == 401){
+                    scope.retry = rejection.config;
+                    scope.authenticated = false;
+                }
+                return $q.reject(rejection);
+            }
+        };
+	});
+
+    app.config(['$httpProvider', function($httpProvider){
+        $httpProvider.interceptors.push('authInterceptor');
+//        $httpProvider.defaults.transformRequest.push(addTransformRequest);
+    }]);
 
 })();
 
+
+/*
+- api calls against eda5_managed should contains the contents of sessionStorage['AuthToken']
+- if they don't of if it is invalid, eda5_managed returns a 400 error and the client responds
+  by prompting the user for a login which is verified asynchronously
+- a success result will contain the AuthToken which should be put into sessionStorage['AuthToken']
+  and the initial request should be retried
+
+On page refresh sessionStorage is checked for the AuthToken
+On pre-request the AuthToken is put into the header of the request config
+On 401 failure the $rootScope.authenticated variable is set to false
+On successfully acquisition of an AuthToken it is put into the sessionStorage
+
+*/
 
 

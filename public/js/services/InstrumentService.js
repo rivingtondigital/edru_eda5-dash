@@ -96,7 +96,7 @@ app = angular.module('eda.instrument_service', []);
 		var iservice = this;
 
 		this.fetch_all_questionnaires = function(){
-			$http.jsonp(api_domain+'list.json?callback=JSON_CALLBACK')
+			$http.get(api_domain+'list.json') //?callback=JSON_CALLBACK')
 				.success(function(data){
 					iservice.all_questionnaires = data;
 					$rootscope.$broadcast('update_questionnaires');
@@ -112,9 +112,9 @@ app = angular.module('eda.instrument_service', []);
 			var url = api_domain + 'fetch/'
 								+version.major+'/'
 								+instrument.urlname+'.json'
-								+'?callback=JSON_CALLBACK'
+//								+'?callback=JSON_CALLBACK'
 
-			$http.jsonp(url)
+			$http.post(url)
 			.success(function(data){
 				iservice.initInstrument(data);
 			})

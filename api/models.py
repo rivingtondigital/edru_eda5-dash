@@ -6,7 +6,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from copy import deepcopy
 
-
+client = MongoClient('mongodb')
 
 class EdaModel(object):
 	def __init__(self, **kwargs):
@@ -232,7 +232,7 @@ class Instrument(EdaModel):
 
 	def save(self, versiontype):
 		bson = self.tobson()
-		questionnaires = MongoClient().dsm.questionnaires
+		questionnaires = client.dsm.questionnaires
 		if versiontype == 'major':
 			#Find the next major version
 			major = questionnaires.find_one({'instrument_id': self.instrument_id}, sort=[{"version.major", -1}])['version']['major']

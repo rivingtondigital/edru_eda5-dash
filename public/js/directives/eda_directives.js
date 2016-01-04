@@ -86,6 +86,25 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 
 			scope.instruments = iaservice.all_questionnaires;
 
+
+			scope.pop_interview = function(){
+                var preview_url = "http://interview.eda5.org/index.html?q="+iaservice.current.urlname
+                                    +"&major="+iaservice.current.version.major
+                                    +"&minor="+iaservice.current.version.minor
+
+			    window.open(preview_url, 'preview',
+			        config="toolbar=no,"+
+			        "directories=no,"+
+			        "status=no,"+
+			        "menubar=no,"+
+			        "scrollbars=no,"+
+			        "resizable=yes,"+
+			        "width=600,"+
+			        "height=700,"+
+			        "top=50,"+
+			        "left=100");
+			};
+
 			scope.save_current = function(){
 				(scope, element, attrs, controller);
 				scope.$emit('save_current_questionnaire');

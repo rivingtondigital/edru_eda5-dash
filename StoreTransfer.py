@@ -11,11 +11,12 @@ from slimit import ast
 from slimit.visitors.nodevisitor import ASTVisitor
 
 
-sys.path.append('/home/eda5/public/eda5_org')
-STORE_PATH = '/home/eda5/public/eda5_org/eda5/app/store/'
+sys.path.append('/var/www/eda5-dashboard')
+STORE_PATH = '/var/www/eda5/managed/app/store/'
 
 from api.models import *
 
+client = MongoClient('mongodb')
 
 def extract():
 	instrument = Instrument.from_store(STORE_PATH + 'instrumentstore.js')[0]
@@ -31,12 +32,12 @@ def extract():
 
 
 def clear_questionnaire():
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 	questionnaires.remove()
 	return questionnaires.count()
 
 def get_current():
-	q = MongoClient().dsm.questionnaires
+	q = client.dsm.questionnaires
 	beda = q.find_one()
 	eda5 = Instrument.frombson(beda)
 	return eda5
@@ -145,7 +146,7 @@ def read_stores():
 
 
 def extract_save():
-	questionnaires = MongoClient().dsm.questionnaires
+	questionnaires = client.dsm.questionnaires
 	questionnaires.remove()
 
 	eda5 = read_stores()

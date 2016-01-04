@@ -33,19 +33,21 @@ INSTALLED_APPS = (
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api_auth',
     'tokenapi',
 )
 
 MIDDLEWARE_CLASSES = (
-		'api_auth.middleware.WebTokenMiddleware',
+    'api_auth.middleware.WebTokenMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-		'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -121,10 +123,57 @@ AUTHENTICATION_BACKENDS = (
 	'tokenapi.backends.TokenBackend',
 )
 
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
 	'localhost',
 	'google.com',
 )
+
+# LOGGING_CONFIG = None
+
+LOGGING = {
+    'version': 1,
+    # 'disable_existing_loggers': True,
+
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(name)s %(levelname)s %(pathname)s %(lineno)d %(message)s',
+        }
+    },
+    'handlers': {
+        'django_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django/requests.log',
+            'formatter': 'verbose'
+        },
+        'sql_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django/sql.log',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.db':{
+            'handlers': ['sql_file'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'django': {
+            'handlers': ['django_file'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'eda5': {
+            'handlers': ['django_file'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+
+    }
+}
+
+TIMEOUT = 60
+
