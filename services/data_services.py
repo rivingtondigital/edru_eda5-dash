@@ -74,8 +74,10 @@ def get_all_versions():
         }
         },
     ])
-
-    versions = [unbson(x) for x in versions]
+    if type(versions) == list:
+    	versions = [unbson(x) for x in versions]
+    else:
+        versions = unbson(versions)
     return versions
 
 
@@ -90,11 +92,11 @@ def get_all_versions_flat():
             'description': 1,}
          }
     ])
-    versions = [unbson(x) for x in versions]
+    if type(versions) == list:
+    	versions = [unbson(x) for x in versions]
+    else:
+        versions = unbson(versions)
     return versions
-
-
-get_all_versions_flat()
 
 
 def soft_delete_version(instrument_id):

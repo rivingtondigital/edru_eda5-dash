@@ -26,7 +26,7 @@ class WebTokenMiddleware(object):
         try:
             meta = request.META
             logger.debug('AuthToken: {}'.format(meta.get('HTTP_AUTHTOKEN', 'None')))
-            logger.debug('{}'.format('\n'.join(["{} -> {}".format(m, meta[m]) for m in meta])))
+#            logger.debug('{}'.format('\n'.join(["{} -> {}".format(m, meta[m]) for m in meta])))
             token = meta.get('HTTP_AUTHTOKEN')
             ip_addy = meta.get('REMOTE_ADDR')
             token_obj = AuthToken.objects.get(token=token)
