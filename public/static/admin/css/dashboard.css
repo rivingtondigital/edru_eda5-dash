@@ -28,3 +28,8 @@ ul.actionlist li.changelink {
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 }
+
+.version-small{
+    font-size:smaller;
+    color: lightgray;
+}

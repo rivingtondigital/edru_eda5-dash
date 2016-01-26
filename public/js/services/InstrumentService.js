@@ -52,10 +52,10 @@ function check_dups(questions){
 	return faulty;
 }
 
-app = angular.module('eda.instrument_service', []);
+app = angular.module('eda.instrument_service', ['eda.config']);
 
-	app.service('InstrumentService', ['$http','$rootScope', function($http, $rootscope){
-//		var api_domain = 'http://localhost:8000/ajax/v/'
+	app.service('InstrumentService', ['$http','$rootScope', 'EdaConfig', function($http, $rootscope, eConfig){
+        this.preview_server = eConfig.preview_server;
 		var api_domain = '/api/ajax/v/'
 
 		this.init = function(){
@@ -65,10 +65,18 @@ app = angular.module('eda.instrument_service', []);
 				description: 'Loading...',
 				questions: [],
 				version:{
-					major: 'current',
-					minor: null
+					major: '1',
+					minor: 'current'
 				}
 			};
+
+		    var bookmark = localStorage.getItem('bookmark');
+		    console.debug('Bookmark Found' + bookmark);
+		    if (bookmark){
+		        bookmark = JSON.parse(bookmark);
+                this.current.version.major = bookmark.major;
+                this.current.version.minor = bookmark.minor;
+		    }
 
 			this.all_questionnaires = [
 				this.current,
@@ -96,7 +104,7 @@ app = angular.module('eda.instrument_service', []);
 		var iservice = this;
 
 		this.fetch_all_questionnaires = function(){
-			$http.get(api_domain+'list.json') //?callback=JSON_CALLBACK')
+			$http.get(api_domain+'list.json')
 				.success(function(data){
 					iservice.all_questionnaires = data;
 					$rootscope.$broadcast('update_questionnaires');
@@ -111,6 +119,7 @@ app = angular.module('eda.instrument_service', []);
 		this.fetch_instrument = function(instrument, version){
 			var url = api_domain + 'fetch/'
 								+version.major+'/'
+								+version.minor+'/'
 								+instrument.urlname+'.json'
 //								+'?callback=JSON_CALLBACK'
 
@@ -127,6 +136,12 @@ app = angular.module('eda.instrument_service', []);
 			//$http.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 			var current = iservice.current;
 
+			if (version){
+			    current.version.description = version.description;
+			    current.version.shortname = version.shortname;
+			}
+//			var version = current.version;
+
 			//check for duplicate question_ids
 			var dups = check_dups(current.questions);
 			if (dups.length >= 1){
@@ -135,12 +150,12 @@ app = angular.module('eda.instrument_service', []);
 				return;
 			}
 
-			current._id = null;
-			if (versiontype == 'major'){
-				current.version.shortname = version.shortname;
-				current.version.description = version.description;
-			}
-			current.created_on = Date.now();
+//			current._id = null;
+//			if (versiontype == 'major'){
+//				current.version.shortname = version.shortname;
+//				current.version.description = version.description;
+//			}
+//			current.created_on = Date.now();
 
 			var url = api_domain + 'save/'+versiontype;
 
@@ -149,12 +164,23 @@ app = angular.module('eda.instrument_service', []);
 			};
 
 			var resp = $http.post(url, payload);
-			resp.success(function(data){
-				new_instrument = iservice.current;
-				new_instrument.version =  data;
-				iservice.fetch_instrument(new_instrument, data);
+			resp.success(function(new_version){
+//			    new_version = JSON.parse(data);
+//				new_instrument = iservice.current;
+//				new_instrument.version =  new_version;
+//				iservice.fetch_instrument(new_instrument, new_version);
+                iservice.current.version = new_version;
+
+                bookmark = {
+                    'major': new_version.major,
+                    'minor': new_version.minor
+                };
+                localStorage.setItem('bookmark', JSON.stringify(bookmark));
+
 				iservice.fetch_all_questionnaires();
 				iservice.bc_instrument();
+
+
 			});
 			resp.error(function(data, status){
 				console.info(status);
@@ -222,7 +248,8 @@ app = angular.module('eda.instrument_service', []);
 		});
 
 		$rootscope.$on('save_version_questionnaire', function(evt, version){
-			iservice.save_instrument('major', version);
+//			iservice.save_instrument('major', version);
+            iservice.save_instrument('major', version);
 		});
 
 		$rootscope.$on('delete_current_version', function(evt, version){

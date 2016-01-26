@@ -38,23 +38,24 @@ def get_current_questionnaire(urlname):
 
 
 def get_specific_version(urlname, major, minor):
+    logger.debug('Requesting {}: version {}.{}'.format(urlname, major, minor))
     questionnaires = client.dsm.questionnaires
     if minor == 'current':
-        quest_bson = questionnaires.find_one({
+        quest_bson = questionnaires.find({
             'urlname': urlname,
             'version.major': int(major),
             'deleted_on': None
-        }, sort=[("version.minor", DESCENDING)])
+        }, sort=[("version.minor", DESCENDING)]).next()
 
     else:
-        quest_bson = questionnaires.find_one({
+        quest_bson = questionnaires.find({
             'urlname': urlname,
             'version.major': int(major),
             'version.minor': int(minor),
             'deleted_on': None
-        })
+        }).next()
 
-    logger.info(quest_bson)
+    logger.info(quest_bson['version'])
     if quest_bson != None:
         return unbson(quest_bson)
     else:
@@ -63,40 +64,60 @@ def get_specific_version(urlname, major, minor):
 
 def get_all_versions():
     questionnaires = client.dsm.questionnaires
+
     versions = questionnaires.aggregate([
-        {'$match': {'deleted_on': None}},
-        {'$group': {
-            '_id': '$instrument_id',
-            'instrument_id': {'$first': '$instrument_id'},
-            'name': {'$first': '$name'},
-            'urlname': {'$first': '$urlname'},
-            'versions': {'$addToSet': {'_id': '$_id', 'version': '$version', 'short': '$shortname'}},
-        }
-        },
-    ])
-    if type(versions) == list:
-    	versions = [unbson(x) for x in versions]
-    else:
-        versions = unbson(versions)
+                {'$sort': {'version.major': 1, 'version.minor': -1}},
+                {'$group': {
+                    '_id': '$version.major',
+                    'instrument_id': {'$first': '$instrument_id'},
+                    'name': {'$first': '$name'},
+                    'urlname': {'$first': '$urlname'},
+                    'minor': {'$first': '$version.minor'},
+                    'major': {'$first': '$version.major'},
+                    'shortname': {'$first': '$version.shortname'},
+                    'created_by': {'$first': '$created_by'},
+                    'created_on': {'$first': '$created_on'}
+
+                }},
+                {'$sort': {'created_on': 1}},
+                {'$group':{
+                    '_id': '$instrument_id',
+                    'instrument_id': {'$first': '$instrument_id'},
+                    'name': {'$first': '$name'},
+                    'urlname': {'$first': '$urlname'},
+                    'versions': {'$addToSet': {
+                        'version': {
+                            'created_by': '$created_by',
+                            'created_on': '$created_on',
+                            'shortname': '$shortname',
+                            'major': '$major',
+                            'minor': '$minor'
+                        }
+                    }},
+                 }},
+
+        ])
+
+    versions = [unbson(x) for x in versions]
     return versions
 
 
-def get_all_versions_flat():
-    questionnaires = client.dsm.questionnaires
-    versions = questionnaires.aggregate([
-        {'$match': {'deleted_on': None}},
-        {'$project': {
-            'name': 1,
-            '_id': 1,
-            'instrument_id': 1,
-            'description': 1,}
-         }
-    ])
-    if type(versions) == list:
-    	versions = [unbson(x) for x in versions]
-    else:
-        versions = unbson(versions)
-    return versions
+# def get_all_versions_flat():
+#     questionnaires = client.dsm.questionnaires
+#     versions = questionnaires.aggregate([
+#         {'$match': {'deleted_on': None}},
+#         {'$project': {
+#             'name': 1,
+#             '_id': 1,
+#             'instrument_id': 1,
+#             'description': 1,}
+#          }
+#     ])
+#     if type(versions) == list:
+#     	versions = [unbson(x) for x in versions]
+#     else:
+#         versions = unbson(versions)
+#     return versions
 
 
 def soft_delete_version(instrument_id):

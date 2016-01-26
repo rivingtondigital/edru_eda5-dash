@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'api_auth',
     'tokenapi',
 )
@@ -177,3 +178,6 @@ LOGGING = {
 
 TIMEOUT = 60
 
+NOTEBOOK_ARGUMENTS = [
+    '--ip=0.0.0.0'
+]

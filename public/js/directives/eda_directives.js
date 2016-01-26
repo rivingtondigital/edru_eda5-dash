@@ -1,8 +1,8 @@
 
 app = angular.module('eda.directives', ['eda.instrument_service',
-																				'eda.auth_service',
-																				'ui.codemirror',
-																				'textAngular']);
+                                        'eda.auth_service',
+                                        'ui.codemirror',
+                                        'textAngular']);
 
 
 app.directive('edaLogin', ['AuthService', function(authservice){
@@ -82,92 +82,100 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 		restrict: 'E',
 		templateUrl: 'top_nav.html',
 
-		link: function(scope, element, attrs, controller){
+        link: function(scope, element, attrs, controller){
 
-			scope.instruments = iaservice.all_questionnaires;
+            scope.instruments = iaservice.all_questionnaires;
 
 
-			scope.pop_interview = function(){
-                var preview_url = "http://interview.eda5.org/index.html?q="+iaservice.current.urlname
+            scope.pop_interview = function(){
+                var preview_url = iaservice.server
+                                    +"?q="+iaservice.current.urlname
                                     +"&major="+iaservice.current.version.major
                                     +"&minor="+iaservice.current.version.minor
 
-			    window.open(preview_url, 'preview',
-			        config="toolbar=no,"+
-			        "directories=no,"+
-			        "status=no,"+
-			        "menubar=no,"+
-			        "scrollbars=no,"+
-			        "resizable=yes,"+
-			        "width=600,"+
-			        "height=700,"+
-			        "top=50,"+
-			        "left=100");
-			};
 
-			scope.save_current = function(){
-				(scope, element, attrs, controller);
-				scope.$emit('save_current_questionnaire');
-			};
+                window.open(preview_url, 'preview',
+                    config="toolbar=no,"+
+                    "directories=no,"+
+                    "status=no,"+
+                    "menubar=no,"+
+                    "scrollbars=no,"+
+                    "resizable=yes,"+
+                    "width=600,"+
+                    "height=700,"+
+                    "top=50,"+
+                    "left=100");
+            };
 
-			iaservice.fetch_all_questionnaires();
-			scope.$on('update_questionnaires', function(){
-				scope.instruments = iaservice.all_questionnaires;
-			});
+            document.addEventListener("keydown", function(e) {
+                  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey))      {
+                    e.preventDefault();
+                    scope.save_current();
+                  }
+                }, false);
 
-			scope.select_version = function(instrument, version){
-				iaservice.setCurrent(instrument, version.version);
-			}
+            scope.save_current = function(){
+                (scope, element, attrs, controller);
+                scope.$emit('save_current_questionnaire');
+            };
 
-			scope.save_copy = function(size){
-				var versionDetails = $modal.open({
-					templateUrl: 'myModalContent.html',
-					controller: function($scope, $modalInstance){
-						$scope.version = {
-							short_name: '',
-							description: ''
-						}
-						$scope.ok = function(isValid){
-							if (isValid){
-								$scope.$emit('save_version_questionnaire', $scope.version);
-								$modalInstance.close();
-							}
-						};
-						$scope.cancel = function(){
-							$modalInstance.close();
-						};
-					},
-					size: size,
-					resolve: {
-						version: function(){
-							return scope.version;
-						}
-					}
-				});
-				versionDetails.result.then(function(selectedItems){
-					var a  = 1;
+            iaservice.fetch_all_questionnaires();
+            scope.$on('update_questionnaires', function(){
+                scope.instruments = iaservice.all_questionnaires;
+            });
 
-				});
-			};
+            scope.select_version = function(instrument, version){
+                iaservice.setCurrent(instrument, version.version);
+            }
 
-			scope.delete_version = function(size){
-				var confirm = $modal.open({
-					size: 'sm',
-					templateUrl: 'VersionDelete.html',
-					controller: function($scope, $modalInstance){
-						$scope.ok = function(){
-							$scope.$emit('delete_current_version', $scope.version);
-							$modalInstance.close();
-						}
-						$scope.cancel = function(){
-							$modalInstance.close();
-						}
-					}
-				});
-			};
+            scope.save_copy = function(size){
+                var versionDetails = $modal.open({
+                    templateUrl: 'myModalContent.html',
+                    controller: function($scope, $modalInstance){
+                        $scope.version = {
+                            shortname: '',
+                            description: ''
+                        }
+                        $scope.ok = function(isValid){
+                            if (isValid){
+                                $scope.$emit('save_version_questionnaire', $scope.version);
+                                $modalInstance.close();
+                            }
+                        };
+                        $scope.cancel = function(){
+                            $modalInstance.close();
+                        };
+                    },
+                    size: size,
+                    resolve: {
+                        version: function(){
+                            return scope.version;
+                        }
+                    }
+                });
+                versionDetails.result.then(function(selectedItems){
+                    var a  = 1;
 
-		}
-	};
+                });
+            };
+
+            scope.delete_version = function(size){
+                var confirm = $modal.open({
+                    size: 'sm',
+                    templateUrl: 'VersionDelete.html',
+                    controller: function($scope, $modalInstance){
+                        $scope.ok = function(){
+                            $scope.$emit('delete_current_version', $scope.version);
+                            $modalInstance.close();
+                        }
+                        $scope.cancel = function(){
+                            $modalInstance.close();
+                        }
+                    }
+                });
+            };
+        }
+    };
 }]);
 
 app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http, $templates, $compile){

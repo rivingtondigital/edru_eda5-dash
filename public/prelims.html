@@ -3,17 +3,10 @@
 	<input class='col-sm-9' type='text' ng-model='card.name'/>
 </div>
 <div class='formrow'>
-	<label class='col-sm-3'>Version</label>
+	<label class='col-sm-3'>Interview</label>
 	<div class='col-sm-9'style="
     border: 1px solid lightgray;padding: 20px;overflow:hidden">
 		<div class='row'>
-			<div class='row'>
-				<label class='col-sm-3'>number</label>
-				<span class='col-sm-9' style='font-size:20px; color:green'>
-					{{card.version.major}}.{{card.version.minor}}
-				</span>
-			</div>
-
 			<div class='row formrow'>
 				<label class='col-sm-3'>name</label>
 				<div class='col-sm-9'>
@@ -26,6 +19,12 @@
 					<textarea ng-model='card.version.description' auto-size />
 				</div>
 			</div>
+			<div class='row formrow'>
+				<label class='col-sm-3'>version</label>
+				<span class='col-sm-9' style='font-size:20px; color:green'>
+					{{card.version.major}}.{{card.version.minor}}
+				</span>
+			</div>
 			<div>
 				<button type='button' class='btn btn-default btn-sm'
 					style='margin-left:10px;float:right;'
@@ -34,6 +33,7 @@
 						tooltip='Delete Version' tooltip-placement='left'></span>
 				</button>
 			</div>
+
 		</div>
 	</div>
 </div>

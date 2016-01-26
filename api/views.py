@@ -43,10 +43,10 @@ def get_current(request, q_name):
 
 
 @ensure_csrf_cookie
-def get_major_version(request, major, q_name):
+def get_major_version(request, major, minor, q_name):
 	ret = HttpResponse(content_type='application/json')
 	print major, q_name
-	quest = ds.get_specific_version(q_name, major, 'current')
+	quest = ds.get_specific_version(q_name, major, minor)
 	ret.content = json.dumps(quest)
 	return ret
 
@@ -67,10 +67,15 @@ def get_interview_version(request):
 @ensure_csrf_cookie
 def save_instrument(request, versiontype):
 	body = json.loads(request.body)
+	logger.info('INCOMING QUESTIONNIARE:\n{}'.format(body['questionnaire']))
+	payload = body['questionnaire']
+	del payload['_id']
 	eda5 = Instrument.frombson(body['questionnaire'])
-	eda5.save(versiontype)
+	new_version = eda5.save(versiontype)
 	resp = HttpResponse(content_type='application/json')
-	resp.content = eda5.version.tojson()
+	version = new_version.tojson()
+	logger.info('SAVED VERSION {}'.format(version))
+	resp.content = version
 	return resp
 
 

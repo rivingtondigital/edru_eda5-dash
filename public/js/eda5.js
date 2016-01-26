@@ -7,8 +7,9 @@
         'eda.instrument_service',
         'eda.autosize',
         'eda.auth_service',
-        'eda.directives'
-    ]);
+        'eda.directives',
+        'eda.config',
+]);
 
 
 // 	app.controller('AllInstrumentsController', ['$scope', '$http', 'InstrumentService', function($scope, $http, InstrumentService){
@@ -69,14 +70,13 @@
 
 //	}]);
 
-	app.controller('CardController', ['$scope', 'InstrumentService', function($scope, iService){
-	
+	app.controller('CardController', ['$scope', 'InstrumentService', 'EdaConfig', function($scope, iService, aConfig){
 		$scope.instrument = iService.current;
 		$scope.cardtype = iService.cardtype;
 		$scope.card = iService.card;
 		$scope.editorOptions = {
 			height: '200px'
-		}
+		};
 
 		$scope.$on('change_card', function(){
 			$scope.instrument = iService.current;
