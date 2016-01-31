@@ -66,7 +66,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 				questions: [],
 				version:{
 					major: '1',
-					minor: 'current'
+					minor: '0'
 				}
 			};
 
@@ -135,6 +135,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.save_instrument = function(versiontype, version){
 			//$http.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 			var current = iservice.current;
+			$rootScope.$broadcast('auth_set_timeout');
 
 			if (version){
 			    current.version.description = version.description;
@@ -208,6 +209,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		};
 
 		this.setCard = function(cardtype, card){
+			$rootscope.$broadcast('auth_set_timeout');
+
 			this.cardtype = cardtype;
 			if (cardtype == 'prelims'){
 				this.card = this.current;
@@ -219,6 +222,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		};
 
 		this.addQuestion = function(){
+			$rootscope.$broadcast('auth_set_timeout');
+
 			var next_id = next_question_id(iservice.current.questions);
 		 	var blank_question = {
 				instrument_id: iservice.current.instrument_id,
@@ -238,6 +243,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		};
 
 		this.deleteQuestion = function(question){
+			$rootscope.$broadcast('auth_set_timeout');
+
 			var index = iservice.current.questions.indexOf(question);
 			iservice.current.questions.splice(index, 1);
 			this.bc_instrument();

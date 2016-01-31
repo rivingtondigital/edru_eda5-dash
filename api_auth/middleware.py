@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from api_auth.models import AuthToken
 from django.conf import settings
 from django.utils import timezone
+from datetime import datetime
 
 logger = logging.getLogger('eda5.dashboard.auth.middleware')
 
@@ -39,6 +40,8 @@ class WebTokenMiddleware(object):
             time_since = timezone.now() - token_obj.renewed
             logger.debug('Time since last refresh: {}. Limit {}'.format(time_since.total_seconds() / 60, settings.TIMEOUT))
             assert (time_since.total_seconds() / 60) < settings.TIMEOUT, 'Token expired'
+            token_obj.renewed = datetime.now()
+            token_obj.save()
         except (AuthToken.DoesNotExist, AssertionError) as e:
             logger.info('Auth Failed {}'.format(str(e)))
             return HttpResponse(status=401)
@@ -48,6 +51,7 @@ class WebTokenMiddleware(object):
         logger.info('Successful Authentication for {}'.format(token_obj.user.username))
         return None
 
+    def process_response(self, request, response):
+        response['Auth_Timeout'] = settings.TIMEOUT
+        return response
 
-	def process_response(self, request, response):
-		return response

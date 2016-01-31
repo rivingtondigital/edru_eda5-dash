@@ -9,7 +9,9 @@ app.directive('edaLogin', ['AuthService', function(authservice){
 	return {
 		restrict: 'E',
 		templateUrl: 'login.html',
-		scope: {},
+		scope: {
+		    auth: '@'
+		},
 		link: function(scope, ele, attr){
 			scope.submit_login = function(is_valid){
 				if (is_valid == true){
@@ -45,6 +47,8 @@ app.directive('edaSidebar', ['$modal', 'InstrumentService', function($modal, iSe
 			scope.instrument = iService.current;
 
 			scope.changeCard = function(card){
+//                scope.$broadcast('auth_set_timeout');
+
 				if (card == 'prelims'){
 					iService.setCard('prelims', null);
 				}
@@ -88,7 +92,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 
 
             scope.pop_interview = function(){
-                var preview_url = iaservice.server
+                var preview_url = iaservice.preview_server
                                     +"?q="+iaservice.current.urlname
                                     +"&major="+iaservice.current.version.major
                                     +"&minor="+iaservice.current.version.minor

@@ -11,8 +11,11 @@ from slimit import ast
 from slimit.visitors.nodevisitor import ASTVisitor
 
 
-sys.path.append('/home/eda5/public/eda5_org/eda5_manage')
-STORE_PATH = '/home/eda5/public/eda5_org/eda5/app/store/'
+# sys.path.append('/home/eda5/public/eda5_org/eda5_manage')
+# STORE_PATH = '/home/eda5/public/eda5_org/eda5/app/store/'
+
+sys.path.append('/var/www/eda5-dashboard/eda5_manage')
+STORE_PATH = '/var/www/eda5/default/app/store/'
 
 from api.models import *
 
