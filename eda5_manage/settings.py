@@ -33,7 +33,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'api_auth',
     'tokenapi',
+    'api'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -92,7 +93,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/dashboard/static/'
+STATIC_URL = '/editor/django-static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (

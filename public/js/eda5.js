@@ -117,6 +117,16 @@
 					};
 					open_modal(error);
 				});
+
+				$scope.$on('permission_denied', function(evt, message){
+					var error = {
+						title: 'Permission Denied',
+						message: 	'You are not authorized for that.',
+						details: message
+					};
+					open_modal(error);
+				});
+
 			},
 		};
 	}]);

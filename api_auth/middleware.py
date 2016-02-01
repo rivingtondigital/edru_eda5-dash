@@ -23,6 +23,8 @@ class WebTokenMiddleware(object):
             return None
         if request.path == '/api/ajax/v/interview.json':
             return None
+        if '/api/admin' in request.path:
+            return None
 
         try:
             meta = request.META

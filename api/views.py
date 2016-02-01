@@ -3,6 +3,8 @@ from services import data_services as ds
 from pprint import pprint
 import json
 import logging
+from api_auth.models import InstrumentAuth
+from api.models import DJ_Instrument
 
 
 from django.shortcuts import render
@@ -14,12 +16,14 @@ logger = logging.getLogger('eda5.api.views')
 
 @ensure_csrf_cookie
 def get_versions_list(request):
-        logger.debug('calling get_version_list')        
+	logger.debug('User: {}'.format(request.user))
+	auths = InstrumentAuth.objects.filter(user=request.user)
 	ret = HttpResponse(content_type='application/json')
-	# callback = request.GET['callback']
-	versions = ds.get_all_versions()
-	ret.content = json.dumps(versions)
-	# ret.content = callback+'('+ json.dumps(versions) +')'
+	payload = {
+		'versions': ds.get_all_versions(),
+		'perms': [auth.to_dict() for auth in auths]
+	}
+	ret.content = json.dumps(payload)
 	return ret
 
 @ensure_csrf_cookie
@@ -47,7 +51,19 @@ def get_major_version(request, major, minor, q_name):
 	ret = HttpResponse(content_type='application/json')
 	print major, q_name
 	quest = ds.get_specific_version(q_name, major, minor)
-	ret.content = json.dumps(quest)
+	try:
+		perm = InstrumentAuth.objects.get(user=request.user,
+											 instrument__instrument_id=quest['instrument_id'],
+											 instrument__major_version=quest['version']['major']).to_dict()
+	except InstrumentAuth.DoesNotExist:
+		perm = {}
+	else:
+		perm = perm['permissions']
+
+	ret.content = json.dumps({
+		'questionnaire': quest,
+		'perms': perm
+	})
 	return ret
 
 @ensure_csrf_cookie
@@ -67,11 +83,41 @@ def get_interview_version(request):
 @ensure_csrf_cookie
 def save_instrument(request, versiontype):
 	body = json.loads(request.body)
-	logger.info('INCOMING QUESTIONNIARE:\n{}'.format(body['questionnaire']))
 	payload = body['questionnaire']
+	logger.info('SAVING VERSION TYPE {}'.format(versiontype))
+	try:
+		perm = InstrumentAuth.objects.get(user=request.user,
+											 instrument__instrument_id=payload['instrument_id'],
+											 instrument__major_version=payload['version']['major'])
+		logger.debug('permissions {}'.format(perm.to_dict()))
+		if versiontype == 'minor':
+			assert perm.owner or perm.write
+		# if versiontype == 'major':
+		# 	assert perm.read
+	except (InstrumentAuth.DoesNotExist, AssertionError):
+		return HttpResponse(status=403, content="You can not modify a questionnaire that you do not have write access to.")
+
+	logger.info('INCOMING QUESTIONNIARE:\n{}'.format(body['questionnaire']))
 	del payload['_id']
 	eda5 = Instrument.frombson(body['questionnaire'])
 	new_version = eda5.save(versiontype)
+
+	if versiontype == 'major':
+		instrument = DJ_Instrument()
+		instrument.name = eda5.name
+		instrument.instrument_id = eda5.instrument_id
+		instrument.major_version = new_version.major
+		instrument.shortname = new_version.shortname
+		instrument.save()
+
+		ia = InstrumentAuth()
+		ia.instrument = instrument
+		ia.user = request.user
+		ia.owner = True
+		ia.write = True
+		ia.read = True
+		ia.save()
+
 	resp = HttpResponse(content_type='application/json')
 	version = new_version.tojson()
 	logger.info('SAVED VERSION {}'.format(version))

@@ -106,7 +106,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.fetch_all_questionnaires = function(){
 			$http.get(api_domain+'list.json')
 				.success(function(data){
-					iservice.all_questionnaires = data;
+					iservice.all_questionnaires = data.versions;
+					iservice.perms = data.perms;
 					$rootscope.$broadcast('update_questionnaires');
 				})
 				.error(function(err){
@@ -125,7 +126,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 
 			$http.post(url)
 			.success(function(data){
-				iservice.initInstrument(data);
+			    iservice.current_perms = data.perms;
+				iservice.initInstrument(data.questionnaire);
 			})
 			.error(function(err){
 				console.info(err);
@@ -135,7 +137,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.save_instrument = function(versiontype, version){
 			//$http.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 			var current = iservice.current;
-			$rootScope.$broadcast('auth_set_timeout');
+			$rootscope.$broadcast('auth_set_timeout');
 
 			if (version){
 			    current.version.description = version.description;
@@ -184,7 +186,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 
 			});
 			resp.error(function(data, status){
-				console.info(status);
+				console.info(status, data);
+			    $rootscope.$broadcast('permission_denied', data);
 			});
 		};
 
