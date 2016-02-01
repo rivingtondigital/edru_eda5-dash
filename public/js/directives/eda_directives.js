@@ -88,7 +88,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 
 
             scope.pop_interview = function(){
-                var preview_url = iaservice.server
+                var preview_url = iaservice.preview_server
                                     +"?q="+iaservice.current.urlname
                                     +"&major="+iaservice.current.version.major
                                     +"&minor="+iaservice.current.version.minor

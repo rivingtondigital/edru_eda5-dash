@@ -66,7 +66,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 				questions: [],
 				version:{
 					major: '1',
-					minor: 'current'
+					minor: '0'
 				}
 			};
 
