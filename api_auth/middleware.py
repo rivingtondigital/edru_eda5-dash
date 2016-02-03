@@ -18,7 +18,7 @@ class WebTokenMiddleware(object):
         return response
 
     def process_request(self, request):
-        logger.debug('Requesting {}'.format(request.path))
+#        logger.debug('{} Requesting {}'.format(request.user, request.path))
         if request.path == '/api/auth/auth_token/':
             return None
         if request.path == '/api/ajax/v/interview.json':
@@ -51,6 +51,8 @@ class WebTokenMiddleware(object):
             logger.error('Failed to process auth request', exc_info=True)
             raise
         logger.info('Successful Authentication for {}'.format(token_obj.user.username))
+        request.user = token_obj.user
+
         return None
 
     def process_response(self, request, response):

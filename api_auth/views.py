@@ -6,6 +6,8 @@ import json
 from api_auth.models import AuthToken
 from datetime import datetime
 
+from django.contrib.auth import update_session_auth_hash
+
 # Create your views here.
 logger = logging.getLogger('eda5.dashboard.auth.views')
 
@@ -18,7 +20,6 @@ def get_auth_token(request):
         assert username and password
         user = User.objects.get(username=username)
         assert user.check_password(password)
-
     except (User.DoesNotExist, AssertionError):
         return HttpResponse("Username/password does not match any user in our system.", status=400)
     except:

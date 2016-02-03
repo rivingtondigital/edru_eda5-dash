@@ -35,8 +35,8 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     # 'django.contrib.sites',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
+#    'django.contrib.sessions',
+#    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
     'api_auth',
@@ -45,13 +45,13 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+#    'django.contrib.sessions.middleware.SessionMiddleware',
+#    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'api_auth.middleware.WebTokenMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+#    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
@@ -121,7 +121,7 @@ TEMPLATE_DIRS = (
 
 
 AUTHENTICATION_BACKENDS = (
-	'django.contrib.auth.backends.ModelBackend',
+#	'django.contrib.auth.backends.ModelBackend',
 	'tokenapi.backends.TokenBackend',
 )
 

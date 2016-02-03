@@ -49,7 +49,6 @@ def get_current(request, q_name):
 @ensure_csrf_cookie
 def get_major_version(request, major, minor, q_name):
 	ret = HttpResponse(content_type='application/json')
-	print major, q_name
 	quest = ds.get_specific_version(q_name, major, minor)
 	try:
 		perm = InstrumentAuth.objects.get(user=request.user,
