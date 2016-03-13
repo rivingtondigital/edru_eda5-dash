@@ -242,7 +242,8 @@ class Instrument(EdaModel):
         bson['created_on'] = calendar.timegm(time.gmtime())
         if versiontype == 'major':
             #Find the next major version
-            major = questionnaires.find_one({'instrument_id': self.instrument_id}, sort=[{"version.major", -1}])['version']['major']
+            major = questionnaires.find_one({
+                              'instrument_id': self.instrument_id}, sort=[{"version.major", -1}])['version']['major']
             logger.info('OLD MAJOR {}'.format(major))
 
             bson['version']['major'] = major + 1
@@ -252,28 +253,30 @@ class Instrument(EdaModel):
 
         else:
             #Find the next available minor version and soft delete all previous versions
-            minor = questionnaires.find_one(
-                                                {'instrument_id': self.instrument_id, 'version.major': self.version.major},
-                                                sort=[{"version.minor", -1}]
+            logger.debug("Instrument ID {}\nVersion Major {}".format(self.instrument_id, self.version.major))
+            minor = questionnaires.find_one({
+                                    'instrument_id': str(self.instrument_id), 
+                                    'version.major': int(self.version.major)
+                                  }, sort=[{"version.minor", -1}]
                         )['version']['minor']
             minor = minor + 1
             bson['version']['minor'] = minor
 
-            # questionnaires.update(
-            # 							{
-            # 								'version.major': major,
-            # 								'deleted_on': None,
-            # 								'version.minor':{'$ne': minor}
-            # 							},
-            # 							{
-            # 								'$set':{'deleted_on': datetime.now().strftime('%s')}
-            # 							},
-            # 							multi=True
-            # )
-            # old_id = self._id
-            # new_copy = questionnaires.find_one({'_id': })
-            # logger.info('Saved: {} -> {}'.format(old_id, self._id))
-            # logger.info('Saved new version: {}'.format(self.version.tojson()))
+#          questionnaires.update(
+#              {
+#                  'version.major': major,
+#                  'deleted_on': None,
+#                  'version.minor':{'$ne': minor}
+#              },
+#              {
+#                  '$set':{'deleted_on': datetime.now().strftime('%s')}
+#              },
+#              multi=True
+#          )
+#          # = self._id
+#            new_copy = questionnaires.find_one({'_id': })
+#        logger.info('Saved: {} -> {}'.format(old_id, self._id))
+        logger.info('Saved new version: {}'.format(self.version.tojson()))
         _id = questionnaires.save(bson)
         return Instrument.frombson(bson).version
 
@@ -285,7 +288,7 @@ class DJ_Instrument(models.Model):
     major_version = models.IntegerField()
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.shortname)
+        return "{} ({}) - {}".format(self.name, self.shortname, self.major_version)
 
 
 # questionnaires.find_one({'instrument_id': '1'}, sort=[{"version.major", -1}])['version']['major']

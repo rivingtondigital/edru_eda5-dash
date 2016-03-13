@@ -205,10 +205,10 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			var setCard = function(){
 				getTemplate(scope.cardtype)
 					.success(function(data){
+                                                $('div[cardtype]').children().remove();
 						var template = angular.element(data);
 						var comper = $compile(template);
 						var ele = comper(scope);
-						$('div[cardtype]').children().remove();
 						element.append(ele);
 					})
 					.error(function(data, status, headers, config){
