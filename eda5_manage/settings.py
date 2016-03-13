@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'corsheaders',
+#    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     # 'django.contrib.sites',
@@ -48,7 +48,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'api_auth.middleware.WebTokenMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+#    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -93,7 +93,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/editor/django-static/'
+STATIC_URL = '/dashboard/django-static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -145,7 +145,7 @@ LOGGING = {
     },
     'handlers': {
         'django_file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': '/var/log/django/requests.log',
             'formatter': 'verbose'
@@ -160,17 +160,17 @@ LOGGING = {
     'loggers': {
         'django.db':{
             'handlers': ['sql_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'django': {
             'handlers': ['django_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'eda5': {
             'handlers': ['django_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
 
