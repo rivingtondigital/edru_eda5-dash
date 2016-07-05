@@ -65,6 +65,10 @@ app.directive('edaSidebar', ['$modal', 'InstrumentService', function($modal, iSe
 				qbox.animate({"scrollTop": $('#question_box')[0].scrollHeight}, "slow");
 			};
 
+			scope.orderByFunc = function(question){
+                return parseFloat(question.question_id);
+            };
+
 
 			scope.$on('change_instrument', function(){
 				scope.instrument = iService.current;

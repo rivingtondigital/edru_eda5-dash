@@ -65,6 +65,7 @@ def get_all_versions():
     questionnaires = client.dsm.questionnaires
 
     versions = questionnaires.aggregate([
+                {'$match': {'deleted_on': None}},
                 {'$sort': {'version.major': 1, 'version.minor': -1}},
                 {'$group': {
                     '_id': '$version.major',

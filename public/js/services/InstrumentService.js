@@ -244,6 +244,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 			};
 
 			iservice.current.questions.push(blank_question);
+			iservice.setCard('question', blank_question);
 		};
 
 		this.deleteQuestion = function(question){
