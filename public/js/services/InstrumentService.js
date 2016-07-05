@@ -75,7 +75,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		    if (bookmark){
 		        bookmark = JSON.parse(bookmark);
                 this.current.version.major = bookmark.major;
-                this.current.version.minor = bookmark.minor;
+                this.current.version.minor = 'current';
+                //this.current.version.minor = bookmark.minor;
 		    }
 
 			this.all_questionnaires = [
