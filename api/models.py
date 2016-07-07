@@ -192,7 +192,7 @@ class Question(EdaModel):
         ret = super(Question, cls).fromstore(js)
         ret.question_id = js['id']
         ret.short_name = js['shortname']
-        ret.section_label = js['sectionlabel']
+        ret.section_label = js['section_label']
         ret.probe_text = js['interviewprobe']
         ret.symptom_text = js['symptom']
         ret.rules = [Rule.fromstore(x) for x in js['rules']]

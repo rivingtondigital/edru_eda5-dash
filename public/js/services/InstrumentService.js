@@ -231,6 +231,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 			var next_id = next_question_id(iservice.current.questions);
 		 	var blank_question = {
 				instrument_id: iservice.current.instrument_id,
+				section_label: '',
 				probe_text: '',
 				symptom_text: '',
 				short_name: 'none',
