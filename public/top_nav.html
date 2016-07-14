@@ -40,7 +40,15 @@
 							<li><a href='#' ng-click='save_copy("lg")'>Duplicate...</a></li>
 						</ul>
 					</li>
-					<li><a href='#' ng-click='pop_interview()'>Preview</a></li>
+					<li class="dropdown">
+						<a href='#' class="dropdown-toggle" data-toggle="dropdown">
+							Preview<span class="caret"></span>
+						</a>
+						<ul class='dropdown-menu bigenough' role='preview'>
+							<li><a href="#"  ng-click='pop_interview("en")'>English</a></li>
+							<li><a href="#"  ng-click='pop_interview("no")'>Norwegian</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 			<input type='checkbox' ng-click='show_json=!show_json'>Toggle Raw</input>

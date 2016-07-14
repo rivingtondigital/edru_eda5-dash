@@ -95,11 +95,22 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
             scope.instruments = iaservice.all_questionnaires;
 
 
-            scope.pop_interview = function(){
-                var preview_url = iaservice.preview_server
-                                    +"?q="+iaservice.current.urlname
-                                    +"&major="+iaservice.current.version.major
-                                    +"&minor="+iaservice.current.version.minor
+            scope.pop_interview = function(lang){
+                var params = {
+                    q: iaservice.current.urlname,
+                    major: iaservice.current.version.major,
+                    minor: iaservice.current.version.minor,
+                    debug: true,
+                    lang: lang
+                }
+
+                var obs = window.btoa(JSON.stringify(params))
+                var preview_url = iaservice.preview_server + '?t=' + obs
+
+//                var preview_url = iaservice.preview_server
+//                                    +"?q="+iaservice.current.urlname
+//                                    +"&major="+iaservice.current.version.major
+//                                    +"&minor="+iaservice.current.version.minor
 
 
                 window.open(preview_url, 'preview',
@@ -113,6 +124,18 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
                     "height=700,"+
                     "top=50,"+
                     "left=100");
+            };
+
+            scope.get_url = function(){
+                var params = {
+                    q: iaservice.current.urlname,
+                    major: iaservice.current.version.major,
+                    minor: iaservice.current.version.minor
+                }
+
+                var obs = window.btoa(JSON.stringify(params))
+                var preview_url = iaservice.preview_server + '?t=' + obs;
+                return preview_url;
             };
 
             document.addEventListener("keydown", function(e) {
