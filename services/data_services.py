@@ -55,7 +55,10 @@ def get_specific_version(urlname, major, minor):
             'deleted_on': None
         }).next()
     logger.info(quest_bson['version'])
+    logger.info("LANGUAGE: {}".format(quest_bson.get('language')))
     if quest_bson != None:
+        if 'language' not in quest_bson:
+            quest_bson['language'] = {'id': 'en'}
         return unbson(quest_bson)
     else:
         return None

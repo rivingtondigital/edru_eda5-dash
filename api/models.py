@@ -216,6 +216,7 @@ class Instrument(EdaModel):
         self.version = None
         self.description = None
         self.questions = []
+        self.language = None
         super(Instrument, self).__init__(**kwargs)
 
     @classmethod
@@ -235,8 +236,10 @@ class Instrument(EdaModel):
         return ret
 
     def save(self, versiontype):
+        logger.info('Language: {}'.format(self.language))
+
         questionnaires = client.dsm.questionnaires
-        logger.info('Saving {} verson of {} -> {}'.format(versiontype, self.name, self.version.tojson()))
+        logger.debug('Saving {} verson of {} -> {}'.format(versiontype, self.name, self.version.tojson()))
 
         bson = self.tobson()
         bson['created_on'] = calendar.timegm(time.gmtime())
@@ -244,12 +247,12 @@ class Instrument(EdaModel):
             #Find the next major version
             major = questionnaires.find_one({
                               'instrument_id': self.instrument_id}, sort=[{"version.major", -1}])['version']['major']
-            logger.info('OLD MAJOR {}'.format(major))
+            logger.debug('OLD MAJOR {}'.format(major))
 
             bson['version']['major'] = major + 1
             bson['version']['minor'] = 0
 
-            logger.info('NEW MAJOR {}'.format(bson['version']['major']))
+            logger.debug('NEW MAJOR {}'.format(bson['version']['major']))
 
         else:
             #Find the next available minor version and soft delete all previous versions

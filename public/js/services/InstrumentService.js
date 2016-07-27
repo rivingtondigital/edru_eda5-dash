@@ -66,8 +66,9 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 				questions: [],
 				version:{
 					major: '1',
-					minor: 'current'
-				}
+					minor: 'current',
+				},
+				language: 'en'
 			};
 
 		    var bookmark = localStorage.getItem('bookmark');
@@ -209,7 +210,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.setCurrent = function(instrument, version){
 			this.version = version;
 			var instrument = this.fetch_instrument(instrument, version);
-			this.initInstrument(instrument);
+//			this.initInstrument(instrument);
 		};
 
 		this.setCard = function(cardtype, card){
