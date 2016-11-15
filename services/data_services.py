@@ -70,6 +70,10 @@ def get_all_versions():
     versions = questionnaires.aggregate([
                 {'$match': {'deleted_on': None}},
                 {'$sort': {'version.major': 1, 'version.minor': -1}},
+                #{'$sort': {'version.major': 1}},
+		#{'$limit': 10},
+                #{'$sort': {'version.minor': -1}},
+                
                 {'$group': {
                     '_id': '$version.major',
                     'instrument_id': {'$first': '$instrument_id'},

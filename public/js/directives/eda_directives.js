@@ -107,7 +107,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
             }
 
             scope.pop_interview = function(){
-                var preview_url = get_url(true);
+                var preview_url = get_url(false);
 
                 window.open(preview_url, 'preview',
                     config="toolbar=no,"+
