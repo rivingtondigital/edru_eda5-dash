@@ -2,6 +2,11 @@
 	<div class='formrow row' style='overflow:visible'>
 		<label class='col-sm-12'>Rules</label>
 		<div ng-repeat='rule in rules' class='col-sm-12 sub_section'>
+			<div class='formrow'>
+				<label class='col-sm-12'>comment</label>
+				<textarea class='col-sm-12' ng-model='rule.comment'auto-size></textarea>
+			</div>
+
 			<pre ng-show="show_json">{{ rule | json_expand }}</pre>
 			<div class='formrow'>
 				<label class='col-sm-4'>expression</label>
