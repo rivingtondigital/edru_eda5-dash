@@ -153,6 +153,7 @@ class Answer(EdaModel):
 
 class Rule(EdaModel):
     def __init__(self, **kwargs):
+        self.comment = None
         self.expression = None
         self.target = None
         self.question_id = None
