@@ -82,6 +82,44 @@ def get_interview_version(request):
 
 
 @ensure_csrf_cookie
+def new_questionnaire(request):
+    body = json.loads(request.body)
+    logger.info("REQ: {}".format(body))
+    inst = Instrument()
+
+    inst.name = body['displayname']
+    inst.instrument_id = body['q_number']
+    inst.description = body['description']
+    inst.urlname = body['url_name']
+
+    version = Version()
+    version.shortname = 'General'
+    version.major = 1
+    version.minor = 1
+    version.description = 'Initial Version'
+    inst.version = version
+    inst.save('new')
+
+    dj_inst = DJ_Instrument()
+    dj_inst.name = inst.name
+    dj_inst.instrument_id = int(inst.instrument_id)
+    dj_inst.major_version = inst.version.major
+    dj_inst.shortname = inst.version.shortname
+    dj_inst.save()
+
+    ia = InstrumentAuth()
+    ia.instrument = dj_inst
+    ia.user = request.user
+    ia.owner = True
+    ia.write = True
+    ia.read = True
+    ia.save()
+
+    logger.info("New Inst: {} ".format(dj_inst))
+    return HttpResponse(200)
+
+
+@ensure_csrf_cookie
 def save_instrument(request, versiontype):
     body = json.loads(request.body)
     payload = body['questionnaire']
@@ -101,13 +139,13 @@ def save_instrument(request, versiontype):
 
     logger.debug('INCOMING QUESTIONNIARE:\n{}'.format(body['questionnaire']))
     del payload['_id']
-    eda5 = Instrument.frombson(body['questionnaire'])
-    new_version = eda5.save(versiontype)
+    inst = Instrument.frombson(body['questionnaire'])
+    new_version = inst.save(versiontype)
 
     if versiontype == 'major':
         instrument = DJ_Instrument()
-        instrument.name = eda5.name
-        instrument.instrument_id = eda5.instrument_id
+        instrument.name = inst.name
+        instrument.instrument_id = inst.instrument_id
         instrument.major_version = new_version.major
         instrument.shortname = new_version.shortname
         instrument.save()

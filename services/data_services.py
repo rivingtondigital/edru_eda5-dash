@@ -67,43 +67,77 @@ def get_specific_version(urlname, major, minor):
 def get_all_versions():
     questionnaires = client.dsm.questionnaires
 
+    # versions = questionnaires.aggregate([
+    #             {'$match': {'deleted_on': None}},
+    #             {'$sort': {'version.major': 1, 'version.minor': -1}},
+    #             #{'$sort': {'version.major': 1}},
+		# #{'$limit': 10},
+    #             #{'$sort': {'version.minor': -1}},
+    #
+    #             {'$group': {
+    #                 '_id': '$version.major',
+    #                 'instrument_id': {'$first': '$instrument_id'},
+    #                 'name': {'$first': '$name'},
+    #                 'urlname': {'$first': '$urlname'},
+    #                 'minor': {'$first': '$version.minor'},
+    #                 'major': {'$first': '$version.major'},
+    #                 'shortname': {'$first': '$version.shortname'},
+    #                 'created_by': {'$first': '$created_by'},
+    #                 'created_on': {'$first': '$created_on'}
+    #
+    #             }},
+    #             {'$sort': {'created_on': 1}},
+    #             {'$group':{
+    #                 '_id': '$instrument_id',
+    #                 'instrument_id': {'$first': '$instrument_id'},
+    #                 'name': {'$first': '$name'},
+    #                 'urlname': {'$first': '$urlname'},
+    #                 'versions': {'$addToSet': {
+    #                     'version': {
+    #                         'created_by': '$created_by',
+    #                         'created_on': '$created_on',
+    #                         'shortname': '$shortname',
+    #                         'major': '$major',
+    #                         'minor': '$minor'
+    #                     }
+    #                 }},
+    #              }},
+    #
+    #     ])
+
     versions = questionnaires.aggregate([
-                {'$match': {'deleted_on': None}},
-                {'$sort': {'version.major': 1, 'version.minor': -1}},
-                #{'$sort': {'version.major': 1}},
-		#{'$limit': 10},
-                #{'$sort': {'version.minor': -1}},
-                
-                {'$group': {
-                    '_id': '$version.major',
-                    'instrument_id': {'$first': '$instrument_id'},
-                    'name': {'$first': '$name'},
-                    'urlname': {'$first': '$urlname'},
-                    'minor': {'$first': '$version.minor'},
-                    'major': {'$first': '$version.major'},
-                    'shortname': {'$first': '$version.shortname'},
-                    'created_by': {'$first': '$created_by'},
-                    'created_on': {'$first': '$created_on'}
+        {'$match': {'deleted_on': None}},
+        {'$unwind': '$version'},
+        #      {'$sort': {'name': -1, 'created_on': 1, 'version.major': -1, 'version.minor': 1}},
+        {'$group': {
+            '_id': {'major': '$version.major', 'instrument': '$instrument_id'},
+            'minor': {'$max': '$version.minor'},
+            'name': {'$first': '$name'},
+            'urlname': {'$first': '$urlname'},
+            'shortname': {'$first': '$version.shortname'},
+            'created_by': {'$max': '$version.created_by'},
+            'created_on': {'$max': '$version.created_on'},
+        }},
+        {'$group': {
+            '_id': '$_id.instrument',
+            'instrument_id': {'$first': '$_id.instrument'},
+            'name': {'$first': '$name'},
+            'urlname': {'$first': '$urlname'},
+            'versions': {
+                '$addToSet': {
+                    'version': {
+                        'created_by': '$created_by',
+                        'created_on': '$created_on',
+                        'shortname': '$shortname',
+                        'major': '$_id.major',
+                        'minor': '$minor'
+                    }
+                }
+            }
 
-                }},
-                {'$sort': {'created_on': 1}},
-                {'$group':{
-                    '_id': '$instrument_id',
-                    'instrument_id': {'$first': '$instrument_id'},
-                    'name': {'$first': '$name'},
-                    'urlname': {'$first': '$urlname'},
-                    'versions': {'$addToSet': {
-                        'version': {
-                            'created_by': '$created_by',
-                            'created_on': '$created_on',
-                            'shortname': '$shortname',
-                            'major': '$major',
-                            'minor': '$minor'
-                        }
-                    }},
-                 }},
+        }}
+    ])
 
-        ])
 
     versions = [unbson(x) for x in versions]
     return versions

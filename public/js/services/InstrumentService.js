@@ -136,6 +136,25 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 			});
 		};
 
+		this.new_questionnaire = function(newq){
+			$rootscope.$broadcast('auth_set_timeout');
+			var url = api_domain + 'new_questionnaire';
+			console.info(newq);
+
+			var payload = {
+        displayname: newq.displayname,
+        q_number: newq.q_number,
+        url_name: newq.url_name,
+        description: newq.description
+
+			};
+
+      var resp = $http.post(url, payload);
+      resp.success(function(new_version){
+        console.info("Instrument Saved");
+      });
+		};
+
 		this.save_instrument = function(versiontype, version){
 			//$http.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 			var current = iservice.current;
@@ -271,6 +290,9 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		});
 		$rootscope.$on('delete_question', function(evt, question){
 			iservice.deleteQuestion(question);
+		});
+		$rootscope.$on('create_new_questionnaire', function(evt, details){
+		  iservice.new_questionnaire(details);
 		});
 
 

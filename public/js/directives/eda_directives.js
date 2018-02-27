@@ -90,111 +90,144 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 		restrict: 'E',
 		templateUrl: 'top_nav.html',
 
-        link: function(scope, element, attrs, controller){
-            scope.instruments = iaservice.all_questionnaires;
+    link: function(scope, element, attrs, controller){
+      scope.instruments = iaservice.all_questionnaires;
 
-            get_url = function(debug){
-                var params = {
-                    q: iaservice.current.urlname,
-                    major: iaservice.current.version.major,
-                    minor: iaservice.current.version.minor,
-                    lang: iaservice.current.language.id,
-                    debug: debug
-                }
+      get_url = function(debug){
+        var params = {
+          q: iaservice.current.urlname,
+          major: iaservice.current.version.major,
+          minor: iaservice.current.version.minor,
+          lang: iaservice.current.language.id,
+          debug: true
+        }
 
-                var obs = window.btoa(JSON.stringify(params));
-                return iaservice.preview_server + '?t=' + obs;
-            }
+        var obs = window.btoa(JSON.stringify(params));
+        return iaservice.preview_server + '?t=' + obs;
+      }
 
-            scope.pop_interview = function(){
-                var preview_url = get_url(false);
+      scope.pop_interview = function(){
+      var preview_url = get_url(false);
 
-                window.open(preview_url, 'preview',
-                    config="toolbar=no,"+
-                    "directories=no,"+
-                    "status=no,"+
-                    "menubar=no,"+
-                    "scrollbars=no,"+
-                    "resizable=yes,"+
-                    "width=600,"+
-                    "height=700,"+
-                    "top=50,"+
-                    "left=100");
-            };
+      window.open(preview_url, 'preview',
+        config="toolbar=no,"+
+        "directories=no,"+
+        "status=no,"+
+        "menubar=no,"+
+        "scrollbars=no,"+
+        "resizable=yes,"+
+        "width=600,"+
+        "height=700,"+
+        "top=50,"+
+        "left=100");
+      };
 
 			scope.$on('change_instrument', function(){
 				scope.prod_url = get_url(false);
 			});
 
-            document.addEventListener("keydown", function(e) {
-                  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
-                    e.preventDefault();
-                    scope.save_current();
-                  }
-                }, false);
-
-            scope.save_current = function(){
-                (scope, element, attrs, controller);
-                scope.$emit('save_current_questionnaire');
-            };
-
-            iaservice.fetch_all_questionnaires();
-            scope.$on('update_questionnaires', function(){
-                scope.instruments = iaservice.all_questionnaires;
-            });
-
-            scope.select_version = function(instrument, version){
-                iaservice.setCurrent(instrument, version.version);
-            }
-
-            scope.save_copy = function(size){
-                var versionDetails = $modal.open({
-                    templateUrl: 'myModalContent.html',
-                    controller: function($scope, $modalInstance){
-                        $scope.version = {
-                            shortname: '',
-                            description: ''
-                        }
-                        $scope.ok = function(isValid){
-                            if (isValid){
-                                $scope.$emit('save_version_questionnaire', $scope.version);
-                                $modalInstance.close();
-                            }
-                        };
-                        $scope.cancel = function(){
-                            $modalInstance.close();
-                        };
-                    },
-                    size: size,
-                    resolve: {
-                        version: function(){
-                            return scope.version;
-                        }
-                    }
-                });
-                versionDetails.result.then(function(selectedItems){
-                    var a  = 1;
-
-                });
-            };
-
-            scope.delete_version = function(size){
-                var confirm = $modal.open({
-                    size: 'sm',
-                    templateUrl: 'VersionDelete.html',
-                    controller: function($scope, $modalInstance){
-                        $scope.ok = function(){
-                            $scope.$emit('delete_current_version', $scope.version);
-                            $modalInstance.close();
-                        }
-                        $scope.cancel = function(){
-                            $modalInstance.close();
-                        }
-                    }
-                });
-            };
+      document.addEventListener("keydown", function(e) {
+        if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
+          e.preventDefault();
+          scope.save_current();
         }
-    };
+      }, false);
+
+      scope.save_current = function(){
+          (scope, element, attrs, controller);
+          scope.$emit('save_current_questionnaire');
+      };
+
+      iaservice.fetch_all_questionnaires();
+      scope.$on('update_questionnaires', function(){
+          scope.instruments = iaservice.all_questionnaires;
+      });
+
+      scope.select_version = function(instrument, version){
+          iaservice.setCurrent(instrument, version.version);
+      }
+
+      scope.create_new = function(){
+        var versionDetails = $modal.open({
+          templateUrl: 'new_questionnaire.html',
+          controller: function($scope, $modalInstance){
+            $scope.newq = {
+                displayname: '',
+                q_number: '',
+                url_name: '',
+                description: ''
+            }
+            $scope.ok = function(isValid){
+                if (isValid){
+                    $scope.$emit('create_new_questionnaire', $scope.newq);
+                    $modalInstance.close();
+                }
+            };
+            $scope.cancel = function(){
+                $modalInstance.close();
+            };
+            $scope.box_name = 'New Questionnaire';
+          },
+          size: 'md',
+          resolve: {
+              version: function(){
+                  return scope.version;
+              }
+          }
+        });
+
+      }
+
+      scope.save_copy = function(size){
+        var versionDetails = $modal.open({
+          templateUrl: 'myModalContent.html',
+          controller: function($scope, $modalInstance){
+            $scope.version = {
+                shortname: '',
+                description: ''
+            }
+            $scope.ok = function(isValid){
+                if (isValid){
+                    $scope.$emit('save_version_questionnaire', $scope.version);
+                    $modalInstance.close();
+                }
+            };
+            $scope.cancel = function(){
+                $modalInstance.close();
+            };
+            $scope.box_name = 'Save Version';
+
+          },
+          size: 'md',
+          resolve: {
+              version: function(){
+                  return scope.version;
+              }
+          }
+        });
+        versionDetails.result.then(function(selectedItems){
+            var a  = 1;
+
+        });
+      };
+
+      scope.delete_version = function(size){
+        var confirm = $modal.open({
+          size: 'sm',
+          templateUrl: 'VersionDelete.html',
+          controller: function($scope, $modalInstance){
+            $scope.ok = function(){
+                $scope.$emit('delete_current_version', $scope.version);
+                $modalInstance.close();
+            }
+            $scope.cancel = function(){
+                $modalInstance.close();
+            }
+          }
+        });
+      };
+    }
+  };
 }]);
 
 app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http, $templates, $compile){

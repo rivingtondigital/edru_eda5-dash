@@ -15,7 +15,7 @@
 							File<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href='#'>Create New Questionnaire</a></li>
+							<li><a ng-click="create_new()">Create New Questionnaire</a></li>
 							<li class='divider'></li>
 
 							<li class='dropdown-submenu' ng-repeat='instrument in instruments'>
@@ -69,7 +69,7 @@
 <script type="text/ng-template" id="myModalContent.html">
 	<form name='new_version'>
 		<div class="modal-header">
-				<h3 class="modal-title">Version Details</h3>
+				<h3 class="modal-title">New Version</h3>
 		</div>
 		<div class="modal-body">
 			<div class='formrow'>
@@ -89,6 +89,36 @@
 	</div>
 </script>
 
+<script type="text/ng-template" id="new_questionnaire.html">
+	<form name='new_questionnaire'>
+		<div class="modal-header">
+				<h3 class="modal-title">New Questionnaire</h3>
+		</div>
+		<div class="modal-body">
+			<div class='formrow'>
+				<label class='col-sm-4'>Name</label>
+				<input class='col-sm-8' type='text' ng-model='newq.displayname' required/>
+			</div>
+			<div class='formrow'>
+				<label class='col-sm-4'>Number</label>
+				<input class='col-sm-8' type='text' ng-model='newq.q_number' required/>
+			</div>
+			<div class='formrow'>
+				<label class='col-sm-4'>Url Name</label>
+				<input class='col-sm-8' type='text' ng-model='newq.url_name' required/>
+			</div>
+			<div class='formrow'>
+				<label class='col-sm-4'>Description</label>
+				<textarea class='col-sm-8' style='margin-top:2px' ng-model='newq.description' required></textarea>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="ok(true)">OK</button>
+				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		</div>
+	</div>
+</script>
 
 <script type="text/ng-template" id="url_modal.html">
 	<form name='new_version'>

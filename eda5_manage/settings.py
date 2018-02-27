@@ -26,6 +26,7 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [
 	'interview.eda5.org',
+        'interview.dev.dsm'
 ]
 
 
@@ -149,13 +150,13 @@ LOGGING = {
         'django_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/django/requests.log',
+            'filename': '/home/jc/dsm/log/requests.log',
             'formatter': 'verbose'
         },
         'sql_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/django/sql.log',
+            'filename': '/home/jc/dsm/log/sql.log',
             'formatter': 'verbose'
         },
     },

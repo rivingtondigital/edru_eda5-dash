@@ -244,7 +244,11 @@ class Instrument(EdaModel):
 
         bson = self.tobson()
         bson['created_on'] = calendar.timegm(time.gmtime())
-        if versiontype == 'major':
+
+        if versiontype == 'new':
+            questionnaires.save(bson)
+
+        elif versiontype == 'major':
             #Find the next major version
             major = questionnaires.find_one({
                               'instrument_id': self.instrument_id}, sort=[{"version.major", -1}])['version']['major']
