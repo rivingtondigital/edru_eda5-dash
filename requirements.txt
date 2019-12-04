@@ -1,6 +1,6 @@
 BeautifulSoup==3.2.1
 Cheetah==2.4.4
-Django==1.7.7
+Django==1.11.23
 M2Crypto==0.21.1
 PAM==0.4.2
 Pillow==6.2.0
