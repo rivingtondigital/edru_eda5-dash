@@ -208,7 +208,8 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			};
 			$scope.language_options = [
 			    {id: 'en', name: 'English'},
-			    {id: 'no', name: 'Norwegian'}
+			    {id: 'no', name: 'Norwegian'},
+			    {id: 'tr', name: 'Turkish'}
 			]
 		},
 		link: function(scope, element, attrs, controller){
