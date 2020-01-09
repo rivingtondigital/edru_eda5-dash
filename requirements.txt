@@ -3,7 +3,7 @@ Cheetah==2.4.4
 Django==1.7.7
 M2Crypto==0.21.1
 PAM==0.4.2
-Pillow==2.3.0
+Pillow==6.2.0
 PyYAML==3.10
 SecretStorage==2.0.0
 amqp==1.3.3
@@ -43,7 +43,7 @@ lxml==3.3.3
 mailer==0.7
 matplotlib==1.3.1
 mechanize==0.2.5
-nltk==2.0.4
+nltk==3.4.5
 numpy==1.8.2
 oauth==1.0.1
 oauth2==1.5.211
