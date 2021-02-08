@@ -99,7 +99,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
                     major: iaservice.current.version.major,
                     minor: iaservice.current.version.minor,
                     lang: iaservice.current.language.id,
-                    debug: debug
+                    debug: debug 
                 }
 
                 var obs = window.btoa(JSON.stringify(params));
@@ -107,7 +107,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
             }
 
             scope.pop_interview = function(){
-                var preview_url = get_url(false);
+                var preview_url = get_url(true);
 
                 window.open(preview_url, 'preview',
                     config="toolbar=no,"+
@@ -208,7 +208,8 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			};
 			$scope.language_options = [
 			    {id: 'en', name: 'English'},
-			    {id: 'no', name: 'Norwegian'}
+			    {id: 'no', name: 'Norwegian'},
+			    {id: 'tr', name: 'Turkish'}
 			]
 		},
 		link: function(scope, element, attrs, controller){
