@@ -131,6 +131,5 @@ def save_instrument(request, versiontype):
 def delete_questionnaire_version(request, instrument_id):
     resp = HttpResponse(content_type='application/json')
     ds.soft_delete_version(instrument_id)
-    print 'Deleted this: ', instrument_id
     resp.content = 'Deleted: ', instrument_id
     return resp
