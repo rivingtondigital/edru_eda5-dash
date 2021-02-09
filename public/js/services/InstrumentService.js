@@ -66,8 +66,9 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 				questions: [],
 				version:{
 					major: '1',
-					minor: '0'
-				}
+					minor: 'current',
+				},
+				language: 'en'
 			};
 
 		    var bookmark = localStorage.getItem('bookmark');
@@ -75,7 +76,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		    if (bookmark){
 		        bookmark = JSON.parse(bookmark);
                 this.current.version.major = bookmark.major;
-                this.current.version.minor = bookmark.minor;
+                this.current.version.minor = 'current';
+                //this.current.version.minor = bookmark.minor;
 		    }
 
 			this.all_questionnaires = [
@@ -208,7 +210,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.setCurrent = function(instrument, version){
 			this.version = version;
 			var instrument = this.fetch_instrument(instrument, version);
-			this.initInstrument(instrument);
+//			this.initInstrument(instrument);
 		};
 
 		this.setCard = function(cardtype, card){
@@ -230,6 +232,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 			var next_id = next_question_id(iservice.current.questions);
 		 	var blank_question = {
 				instrument_id: iservice.current.instrument_id,
+				section_label: '',
 				probe_text: '',
 				symptom_text: '',
 				short_name: 'none',
@@ -243,6 +246,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 			};
 
 			iservice.current.questions.push(blank_question);
+			iservice.setCard('question', blank_question);
 		};
 
 		this.deleteQuestion = function(question){

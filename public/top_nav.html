@@ -40,7 +40,25 @@
 							<li><a href='#' ng-click='save_copy("lg")'>Duplicate...</a></li>
 						</ul>
 					</li>
-					<li><a href='#' ng-click='pop_interview()'>Preview</a></li>
+					<li class="dropdown">
+						<a href='#' ng-click="pop_interview()">
+							Preview
+						</a>
+					</li>
+
+					<li class="dropdown">
+						<a href='#' class="dropdown-toggle" data-toggle="dropdown">
+							URL
+						</a>
+					</li>
+					<li class="nav">
+						<input class="form-control"
+							   style="margin:10px;cursor:text"
+							   type="text"
+							   size="50"
+							   placeholder="url" value="{{prod_url}}" readonly>
+					</li>
+
 				</ul>
 			</div>
 			<input type='checkbox' ng-click='show_json=!show_json'>Toggle Raw</input>
@@ -67,6 +85,29 @@
 		<div class="modal-footer">
 				<button class="btn btn-primary" ng-click="ok(new_version.$valid)">OK</button>
 				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		</div>
+	</div>
+</script>
+
+
+<script type="text/ng-template" id="url_modal.html">
+	<form name='new_version'>
+		<div class="modal-header">
+				<span class='col-sm-8'>{{version.version.shortname}}</span>
+				<span class='col-sm-4 version-small'>v. {{version.version.major}}.{{version.version.minor}}</span>
+				<span class='col-sm-4 version-small'>v. {{version.lang}}</span>
+		</div>
+		<div class="modal-body">
+			<div class='formrow'>
+				<label class='col-sm-4'>URL</label>
+				<input type='textarea' class='col-sm-8' style='margin-top:2px'>
+					{{version.url}}
+				</input>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+				<button class="btn btn-warning" ng-click="close()">Close</button>
 		</div>
 	</div>
 </script>

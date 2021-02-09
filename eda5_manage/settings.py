@@ -20,11 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '$b0+p#1icsm41_)i+jcto7f_h^*@rkl#-g#(0z%!q1nb!c834v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'interview.eda5.org',
+]
 
 
 # Application definition

@@ -40,3 +40,6 @@ class InstrumentAuth(models.Model):
                 'read': self.read
             }
         }
+
+    def __str__(self):
+        return "{}: {}".format(self.instrument, self.user)

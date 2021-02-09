@@ -55,7 +55,10 @@ def get_specific_version(urlname, major, minor):
             'deleted_on': None
         }).next()
     logger.info(quest_bson['version'])
+    logger.info("LANGUAGE: {}".format(quest_bson.get('language')))
     if quest_bson != None:
+        if 'language' not in quest_bson:
+            quest_bson['language'] = {'id': 'en'}
         return unbson(quest_bson)
     else:
         return None
@@ -65,7 +68,12 @@ def get_all_versions():
     questionnaires = client.dsm.questionnaires
 
     versions = questionnaires.aggregate([
+                {'$match': {'deleted_on': None}},
                 {'$sort': {'version.major': 1, 'version.minor': -1}},
+                #{'$sort': {'version.major': 1}},
+		#{'$limit': 10},
+                #{'$sort': {'version.minor': -1}},
+                
                 {'$group': {
                     '_id': '$version.major',
                     'instrument_id': {'$first': '$instrument_id'},
