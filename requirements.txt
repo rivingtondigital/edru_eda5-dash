@@ -36,7 +36,7 @@ pexpect==4.0.1
 pickleshare==0.5
 ply==3.4
 ptyprocess==0.5
-Pygments==2.0.2
+Pygments==2.7.4
 pymongo==3.1.1
 pyparsing==2.2.0
 pytz==2015.7
