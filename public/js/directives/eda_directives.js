@@ -210,7 +210,8 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			    {id: 'en', name: 'English'},
 			    {id: 'no', name: 'Norwegian'},
 			    {id: 'tr', name: 'Turkish'},
-			    {id: 'ar', name: 'Arabic'}
+			    {id: 'ar', name: 'Arabic'},
+                            {id: 'de', name: 'German'}
 			]
 		},
 		link: function(scope, element, attrs, controller){
