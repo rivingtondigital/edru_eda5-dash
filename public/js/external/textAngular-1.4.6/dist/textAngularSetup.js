@@ -101,7 +101,7 @@ angular.module('textAngularSetup', [])
 	keyMappings : [],
 	toolbar: [
 		['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-		['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+		['fontSize', 'bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
 		['justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent'],
 		['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']
 	],
@@ -444,6 +444,32 @@ angular.module('textAngularSetup', [])
 	if ((taOptions.forceTextAngularSanitize===true) && (gv.version !== 'taSanitize')) {
 		throw angular.$$minErr('textAngular')("textAngularSetup", "The textAngular-sanitize provider has been replaced by another -- have you included angular-sanitize by mistake?");
 	}
+	taRegisterTool("fontSize", {
+            display: "<span class='bar-btn-dropdown dropdown'>" +
+            "<button class='btn btn-blue dropdown-toggle' type='button' ng-disabled='showHtml()' style='padding-top: 4px'><i class='fa fa-text-height'></i><i class='fa fa-caret-down'></i></button>" +
+            "<ul class='dropdown-menu'><li ng-repeat='o in options'><button class='btn btn-blue checked-dropdown' style='font-size: {{o.css}}; width: 100%' type='button' ng-click='action($event, o.value)'><i ng-if='o.active' class='fa fa-check'></i> {{o.name}}</button></li></ul>" +
+            "</span>",
+            action: function (event, size) {
+                //Ask if event is really an event.
+                if (!!event.stopPropagation) {
+                    //With this, you stop the event of textAngular.
+                    event.stopPropagation();
+                    //Then click in the body to close the dropdown.
+                    $("body").trigger("click");
+                }
+                return this.$editor().wrapSelection('fontSize', parseInt(size));
+            },
+            options: [
+                { name: 'xx-small', css: 'xx-small', value: 1 },
+                { name: 'x-small', css: 'x-small', value: 2 },
+                { name: 'small', css: 'small', value: 3 },
+                { name: 'medium', css: 'medium', value: 4 },
+                { name: 'large', css: 'large', value: 5 },
+                { name: 'x-large', css: 'x-large', value: 6 },
+                { name: 'xx-large', css: 'xx-large', value: 7 }
+
+            ]
+	});
 	taRegisterTool("html", {
 		iconclass: 'fa fa-code',
 		tooltiptext: taTranslations.html.tooltip,
