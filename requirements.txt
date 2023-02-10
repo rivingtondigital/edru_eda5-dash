@@ -20,7 +20,7 @@ idna==2.10
 ipaddress==1.0.23
 ipdb==0.8.1
 ipykernel==4.2.2
-ipython==4.0.1
+ipython==8.10.0
 ipython-genutils==0.1.0
 ipywidgets==4.1.1
 Jinja2==2.11.3
