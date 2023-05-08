@@ -117,6 +117,16 @@
 					};
 					open_modal(error);
 				});
+
+				$scope.$on('permission_denied', function(evt, message){
+					var error = {
+						title: 'Permission Denied',
+						message: 	'You are not authorized for that.',
+						details: message
+					};
+					open_modal(error);
+				});
+
 			},
 		};
 	}]);
@@ -132,25 +142,29 @@
 //	    headers['AuthToken'] = 'blablbabl';
 //	};
 
-	app.factory('authInterceptor', function($q, $rootScope){
+	app.factory('authInterceptor', function($q, $rootScope, $timeout){
 	    var scope = $rootScope;
+
         return {
             'request': function(config){
 //               config.transformRequest.push(addTransformRequest);
                 if (localStorage.getItem('AuthToken') == null){
-                    scope.authenticated = false;
+                    scope.auth.authenticated = false;
                 }
                 config.headers['AuthToken'] = localStorage.getItem('AuthToken');
-//                console.info(config);
                 return config;
             },
             'requestError': function(rejection){
                 console.info(rejection);
-//                scope.authenticated = false;
             },
             'response': function(response){
-                console.info('response');
-                console.info(response.status);
+                var timer = response.headers('Auth_Timeout');
+                if (timer){
+                    console.info('Setting timer from login');
+                    scope.auth_count = timer * 60 * 1000;
+                    scope.$broadcast('auth_set_timeout');
+                }
+
                 return response;
             },
             'responseError': function(rejection){
@@ -159,7 +173,7 @@
                 console.info(scope.retry);
                 if (rejection.status == 401){
                     scope.retry = rejection.config;
-                    scope.authenticated = false;
+                    scope.auth.authenticated = false;
                 }
                 return $q.reject(rejection);
             }

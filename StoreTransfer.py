@@ -11,8 +11,11 @@ from slimit import ast
 from slimit.visitors.nodevisitor import ASTVisitor
 
 
-sys.path.append('/home/eda5/public/eda5_org/eda5_manage')
-STORE_PATH = '/home/eda5/public/eda5_org/eda5/app/store/'
+# sys.path.append('/home/eda5/public/eda5_org/eda5_manage')
+# STORE_PATH = '/home/eda5/public/eda5_org/eda5/app/store/'
+
+sys.path.append('/var/www/eda5-dashboard/eda5_manage')
+STORE_PATH = '/var/www/eda5/default/app/store/'
 
 from api.models import *
 
@@ -110,13 +113,13 @@ def read_stores():
 
 	questions_tree = parser.parse(questions_store)
 	questions_data = questions_tree.children()[1]\
-								.children()[0]\
-								.children()[2]\
-								.children()[2]\
-								.children()[1]\
-								.children()[2]\
-								.children()[1]\
-								.children()
+                                        .children()[0]\
+                                        .children()[2]\
+                                        .children()[2]\
+                                        .children()[1]\
+                                        .children()[2]\
+                                        .children()[1]\
+                                        .children()
 	questions = obj2dict(questions_data)
 
 	with file(STORE_PATH + '/InstrumentStore.js', 'r') as istore_file:
@@ -131,7 +134,6 @@ def read_stores():
 	questions = [Question.fromstore(x) for x in questions]
 	answers = [Answer.fromstore(x) for x in answers]
 
-	import ipdb;ipdb.set_trace()
 	for question in questions:
 		question.answers = [x for x in answers if x.question_id == question.question_id] #filter(lambda x: x.question_id == question.question_id, answers)
 

@@ -20,20 +20,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '$b0+p#1icsm41_)i+jcto7f_h^*@rkl#-g#(0z%!q1nb!c834v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'interview.eda5.org',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = (
-    'corsheaders',
+#    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -41,15 +43,16 @@ INSTALLED_APPS = (
     'django_extensions',
     'api_auth',
     'tokenapi',
+    'api'
 )
 
 MIDDLEWARE_CLASSES = (
-    'api_auth.middleware.WebTokenMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'api_auth.middleware.WebTokenMiddleware',
+#    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -92,7 +95,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/dashboard/static/'
+STATIC_URL = '/dashboard/django-static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -112,11 +115,23 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR + '/templates',],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages'
+            ]
+        },
+    },
+]
 
-
-TEMPLATE_DIRS = (
-	BASE_DIR + '/templates',
-)
+#TEMPLATE_DIRS = (
+#	BASE_DIR + '/templates',
+#)
 
 
 AUTHENTICATION_BACKENDS = (
@@ -144,7 +159,7 @@ LOGGING = {
     },
     'handlers': {
         'django_file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': '/var/log/django/requests.log',
             'formatter': 'verbose'
@@ -159,17 +174,17 @@ LOGGING = {
     'loggers': {
         'django.db':{
             'handlers': ['sql_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'django': {
             'handlers': ['django_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'eda5': {
             'handlers': ['django_file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
 

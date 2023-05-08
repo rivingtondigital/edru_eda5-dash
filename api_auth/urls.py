@@ -1,6 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import url
 
+from . import views
 
-urlpatterns = patterns('api_auth.views',
-	url(r'auth_token/', 'get_auth_token'),
-)
+urlpatterns = [ 
+	url(r'auth_token/', views.get_auth_token),
+]

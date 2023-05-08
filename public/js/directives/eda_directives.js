@@ -9,7 +9,9 @@ app.directive('edaLogin', ['AuthService', function(authservice){
 	return {
 		restrict: 'E',
 		templateUrl: 'login.html',
-		scope: {},
+		scope: {
+		    auth: '@'
+		},
 		link: function(scope, ele, attr){
 			scope.submit_login = function(is_valid){
 				if (is_valid == true){
@@ -45,6 +47,8 @@ app.directive('edaSidebar', ['$modal', 'InstrumentService', function($modal, iSe
 			scope.instrument = iService.current;
 
 			scope.changeCard = function(card){
+//                scope.$broadcast('auth_set_timeout');
+
 				if (card == 'prelims'){
 					iService.setCard('prelims', null);
 				}
@@ -60,6 +64,10 @@ app.directive('edaSidebar', ['$modal', 'InstrumentService', function($modal, iSe
 				var qbox = $('#question_box');
 				qbox.animate({"scrollTop": $('#question_box')[0].scrollHeight}, "slow");
 			};
+
+			scope.orderByFunc = function(question){
+                return parseFloat(question.question_id);
+            };
 
 
 			scope.$on('change_instrument', function(){
@@ -83,16 +91,23 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
 		templateUrl: 'top_nav.html',
 
         link: function(scope, element, attrs, controller){
-
             scope.instruments = iaservice.all_questionnaires;
 
+            get_url = function(debug){
+                var params = {
+                    q: iaservice.current.urlname,
+                    major: iaservice.current.version.major,
+                    minor: iaservice.current.version.minor,
+                    lang: iaservice.current.language.id,
+                    debug: debug 
+                }
+
+                var obs = window.btoa(JSON.stringify(params));
+                return iaservice.preview_server + '?t=' + obs;
+            }
 
             scope.pop_interview = function(){
-                var preview_url = iaservice.server
-                                    +"?q="+iaservice.current.urlname
-                                    +"&major="+iaservice.current.version.major
-                                    +"&minor="+iaservice.current.version.minor
-
+                var preview_url = get_url(true);
 
                 window.open(preview_url, 'preview',
                     config="toolbar=no,"+
@@ -107,8 +122,12 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
                     "left=100");
             };
 
+			scope.$on('change_instrument', function(){
+				scope.prod_url = get_url(false);
+			});
+
             document.addEventListener("keydown", function(e) {
-                  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey))      {
+                  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
                     e.preventDefault();
                     scope.save_current();
                   }
@@ -187,6 +206,13 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			$scope.textAreaSetup = function($element){
 				$element.attr('ui-codemirror', '');
 			};
+			$scope.language_options = [
+			    {id: 'en', name: 'English'},
+			    {id: 'no', name: 'Norwegian'},
+			    {id: 'tr', name: 'Turkish'},
+			    {id: 'ar', name: 'Arabic'},
+                            {id: 'de', name: 'German'}
+			]
 		},
 		link: function(scope, element, attrs, controller){
 			var getTemplate = function(cardtype){
@@ -201,14 +227,14 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			var setCard = function(){
 				getTemplate(scope.cardtype)
 					.success(function(data){
+                        $('div[cardtype]').children().remove();
 						var template = angular.element(data);
 						var comper = $compile(template);
 						var ele = comper(scope);
-						$('div[cardtype]').children().remove();
 						element.append(ele);
 					})
 					.error(function(data, status, headers, config){
-						debugger;
+					    console.info(data);
 					});
 			}
 			setCard();
@@ -221,7 +247,6 @@ app.directive('edaCard', ['$http', '$templateCache',  '$compile', function($http
 			scope.delete_question = function(){
 				scope.$emit('delete_question', scope.card);
 			}
-
 		}
 	}
 }]);

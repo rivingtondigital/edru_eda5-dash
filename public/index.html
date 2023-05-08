@@ -204,8 +204,8 @@
   </head>
 
   <body>
-		<eda-login ng-hide='authenticated'></eda-login>
-		<eda-instrument ng-if='authenticated'></eda-instrument>
+		<eda-login ng-hide="auth.authenticated"></eda-login>
+		<eda-instrument ng-if="auth.authenticated"></eda-instrument>
 	</body>
 	<eda-error></eda-error>
 	<script type="text/ng-template" id="error.html">

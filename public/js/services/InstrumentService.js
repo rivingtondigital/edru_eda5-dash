@@ -66,8 +66,9 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 				questions: [],
 				version:{
 					major: '1',
-					minor: 'current'
-				}
+					minor: 'current',
+				},
+				language: 'en'
 			};
 
 		    var bookmark = localStorage.getItem('bookmark');
@@ -75,7 +76,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		    if (bookmark){
 		        bookmark = JSON.parse(bookmark);
                 this.current.version.major = bookmark.major;
-                this.current.version.minor = bookmark.minor;
+                this.current.version.minor = 'current';
+                //this.current.version.minor = bookmark.minor;
 		    }
 
 			this.all_questionnaires = [
@@ -106,7 +108,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.fetch_all_questionnaires = function(){
 			$http.get(api_domain+'list.json')
 				.success(function(data){
-					iservice.all_questionnaires = data;
+					iservice.all_questionnaires = data.versions;
+					iservice.perms = data.perms;
 					$rootscope.$broadcast('update_questionnaires');
 				})
 				.error(function(err){
@@ -125,7 +128,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 
 			$http.post(url)
 			.success(function(data){
-				iservice.initInstrument(data);
+			    iservice.current_perms = data.perms;
+				iservice.initInstrument(data.questionnaire);
 			})
 			.error(function(err){
 				console.info(err);
@@ -135,6 +139,7 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.save_instrument = function(versiontype, version){
 			//$http.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 			var current = iservice.current;
+			$rootscope.$broadcast('auth_set_timeout');
 
 			if (version){
 			    current.version.description = version.description;
@@ -183,7 +188,8 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 
 			});
 			resp.error(function(data, status){
-				console.info(status);
+				console.info(status, data);
+			    $rootscope.$broadcast('permission_denied', data);
 			});
 		};
 
@@ -204,10 +210,12 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		this.setCurrent = function(instrument, version){
 			this.version = version;
 			var instrument = this.fetch_instrument(instrument, version);
-			this.initInstrument(instrument);
+//			this.initInstrument(instrument);
 		};
 
 		this.setCard = function(cardtype, card){
+			$rootscope.$broadcast('auth_set_timeout');
+
 			this.cardtype = cardtype;
 			if (cardtype == 'prelims'){
 				this.card = this.current;
@@ -219,9 +227,12 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 		};
 
 		this.addQuestion = function(){
+			$rootscope.$broadcast('auth_set_timeout');
+
 			var next_id = next_question_id(iservice.current.questions);
 		 	var blank_question = {
 				instrument_id: iservice.current.instrument_id,
+				section_label: '',
 				probe_text: '',
 				symptom_text: '',
 				short_name: 'none',
@@ -235,9 +246,12 @@ app = angular.module('eda.instrument_service', ['eda.config']);
 			};
 
 			iservice.current.questions.push(blank_question);
+			iservice.setCard('question', blank_question);
 		};
 
 		this.deleteQuestion = function(question){
+			$rootscope.$broadcast('auth_set_timeout');
+
 			var index = iservice.current.questions.indexOf(question);
 			iservice.current.questions.splice(index, 1);
 			this.bc_instrument();

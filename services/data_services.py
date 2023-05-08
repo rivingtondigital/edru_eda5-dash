@@ -23,18 +23,18 @@ def unbson(chunk):
 client = MongoClient('mongodb')
 
 
-def get_current_questionnaire(urlname):
-    questionnaires = client.dsm.questionnaires
-
-    quest_bson = questionnaires.find_one({
-        'urlname': urlname,
-        'version.major': 1,
-        'deleted_on': None
-    }, sort=[("version.minor", DESCENDING)])
-
-    if quest_bson != None:
-        quest = unbson(quest_bson)
-    return quest
+# def get_current_questionnaire(urlname):
+#     questionnaires = client.dsm.questionnaires
+#
+#     quest_bson = questionnaires.find_one({
+#         'urlname': urlname,
+#         'version.major': 1,
+#         'deleted_on': None
+#     }, sort=[("version.minor", DESCENDING)])
+#
+#     if quest_bson != None:
+#         quest = unbson(quest_bson)
+#     return quest
 
 
 def get_specific_version(urlname, major, minor):
@@ -54,9 +54,11 @@ def get_specific_version(urlname, major, minor):
             'version.minor': int(minor),
             'deleted_on': None
         }).next()
-
     logger.info(quest_bson['version'])
+    logger.info("LANGUAGE: {}".format(quest_bson.get('language')))
     if quest_bson != None:
+        if 'language' not in quest_bson:
+            quest_bson['language'] = {'id': 'en'}
         return unbson(quest_bson)
     else:
         return None
@@ -66,7 +68,12 @@ def get_all_versions():
     questionnaires = client.dsm.questionnaires
 
     versions = questionnaires.aggregate([
+                {'$match': {'deleted_on': None}},
                 {'$sort': {'version.major': 1, 'version.minor': -1}},
+                #{'$sort': {'version.major': 1}},
+		#{'$limit': 10},
+                #{'$sort': {'version.minor': -1}},
+                
                 {'$group': {
                     '_id': '$version.major',
                     'instrument_id': {'$first': '$instrument_id'},
@@ -130,24 +137,24 @@ def soft_delete_version(instrument_id):
     )
 
 
-def update_minor_versions(major, minor):
-    print '************************'
-    print 'downgrading version: ', major
-    print 'except version: ', minor
-    print '************************'
-
-    questionnaires = client.dsm.questionnaires
-    questionnaires.update(
-            {
-                'version.major': int(major),
-                'deleted_on': None,
-                'version.minor': {'$ne': int(minor)}
-            },
-            {
-                '$set': {'deleted_on': datetime.now().strftime('%s')}
-            },
-            multi=True
-    )
+# def update_minor_versions(major, minor):
+#     print '************************'
+#     print 'downgrading version: ', major
+#     print 'except version: ', minor
+#     print '************************'
+#
+#     questionnaires = client.dsm.questionnaires
+#     questionnaires.update(
+#             {
+#                 'version.major': int(major),
+#                 'deleted_on': None,
+#                 'version.minor': {'$ne': int(minor)}
+#             },
+#             {
+#                 '$set': {'deleted_on': datetime.now().strftime('%s')}
+#             },
+#             multi=True
+#     )
 
 # def get_all_versions():
 # 	questionnaires = MongoClient().dsm.questionnaires
