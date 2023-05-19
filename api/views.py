@@ -90,18 +90,14 @@ def save_instrument(request, versiontype):
     logger.info('SAVING VERSION TYPE {}'.format(versiontype))
     try:
         perm = InstrumentAuth.objects.get(user=request.user,
-                                           instrument__instrument_id=payload['instrument_id'],
+                                          instrument__instrument_id=payload['instrument_id'],
                                           instrument__major_version=payload['version']['major'])
         logger.debug('permissions {}'.format(perm.to_dict()))
 
         logger.info("PERM: {}\nUSER: {}".format(perm, request.user.__dict__))
-        if request.user.is_superuser:
-            if perm is None:
-                versiontype = 'major'
 
-        else:
-            if versiontype == 'minor':
-                assert perm.owner or perm.write
+        if versiontype == 'minor':
+            assert perm.owner or perm.write
 
     except (InstrumentAuth.DoesNotExist, AssertionError):
         return HttpResponse(status=403,
