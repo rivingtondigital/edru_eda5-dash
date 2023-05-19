@@ -67,29 +67,6 @@ function removeChildren(a) {
 }
 
 // ----------------------------------------------------------------------------
-// Cross-browser xmlhttp object
-// from http://jibbering.com/2002/4/httprequest.html
-// ----------------------------------------------------------------------------
-var xmlhttp;
-/*@cc_on @*/
-/*@if (@_jscript_version >= 5)
-    try {
-        xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-    } catch (e) {
-        try {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        } catch (E) {
-            xmlhttp = false;
-        }
-    }
-@else
-    xmlhttp = false;
-@end @*/
-if (!xmlhttp && typeof XMLHttpRequest !== 'undefined') {
-    xmlhttp = new XMLHttpRequest();
-}
-
-// ----------------------------------------------------------------------------
 // Find-position functions by PPK
 // See http://www.quirksmode.org/js/findpos.html
 // ----------------------------------------------------------------------------
@@ -176,8 +153,15 @@ function findPosY(obj) {
         return this.getTwoDigitHour() + ':' + this.getTwoDigitMinute() + ':' + this.getTwoDigitSecond();
     };
 
+    Date.prototype.getFullMonthName = function() {
+        return typeof window.CalendarNamespace === "undefined"
+            ? this.getTwoDigitMonth()
+            : window.CalendarNamespace.monthsOfYear[this.getMonth()];
+    };
+
     Date.prototype.strftime = function(format) {
         var fields = {
+            B: this.getFullMonthName(),
             c: this.toString(),
             d: this.getTwoDigitDate(),
             H: this.getTwoDigitHour(),
@@ -207,9 +191,9 @@ function findPosY(obj) {
         return result;
     };
 
-// ----------------------------------------------------------------------------
-// String object extensions
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // String object extensions
+    // ----------------------------------------------------------------------------
     String.prototype.pad_left = function(pad_length, pad_string) {
         var new_string = this;
         for (var i = 0; new_string.length < pad_length; i++) {
@@ -225,22 +209,25 @@ function findPosY(obj) {
         var day, month, year;
         while (i < split_format.length) {
             switch (split_format[i]) {
-                case "%d":
-                    day = date[i];
-                    break;
-                case "%m":
-                    month = date[i] - 1;
-                    break;
-                case "%Y":
-                    year = date[i];
-                    break;
-                case "%y":
-                    year = date[i];
-                    break;
+            case "%d":
+                day = date[i];
+                break;
+            case "%m":
+                month = date[i] - 1;
+                break;
+            case "%Y":
+                year = date[i];
+                break;
+            case "%y":
+                year = date[i];
+                break;
             }
             ++i;
         }
-        return new Date(year, month, day);
+        // Create Date object from UTC since the parsed value is supposed to be
+        // in UTC, not local time. Also, the calendar uses UTC functions for
+        // date extraction.
+        return new Date(Date.UTC(year, month, day));
     };
 
 })();
