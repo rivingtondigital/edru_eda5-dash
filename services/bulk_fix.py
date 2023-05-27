@@ -94,6 +94,7 @@ def make_url(version, debug=True):
         debug: debug
     }
     ret = base64.b64encode(params)
+    return ret
 
 
 def parse_doc(questionnaire):
