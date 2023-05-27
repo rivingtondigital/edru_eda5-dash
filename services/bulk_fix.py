@@ -1,11 +1,14 @@
 import pymongo
 import logging
 import json
+import re
+
 from bson.objectid import ObjectId
 import base64
 from api.models import DJ_Instrument, Instrument
 from api_auth.models import InstrumentAuth
 from django.contrib.auth.models import User
+import data_services as ds
 
 
 SUBS = {'BMI:BMI': 'BMI:BMI',
@@ -82,7 +85,9 @@ def find_all_questionnaires():
 def do_sub(txt):
     for m, sb in SUBS.items():
         if txt and m in txt:
+            print("Found a match: {}".format(m))
             txt = re.sub(m, sb, txt)
+            print("Fixed: {}".format(txt.encode("utf-8")))
     return txt
 
 
@@ -101,6 +106,16 @@ def parse_doc(questionnaire):
     for q in questionnaire.get('questions', []):
         q['probe_text'] = do_sub(q.get('probe_text', ""))
     return questionnaire
+
+
+def correct_version(major):
+    q = ds.get_specific_version('eda5', major, 'current')
+    print("Latest: {}".format(q['version']))
+    q = parse_doc(q)
+    ins = Instrument.frombson(q)
+    ins.save('minor')
+    nxt = ds.get_specific_version('eda5', major, 'current')
+    print("Latest: {}".format(nxt['version']))
 
 
 def bulk_permissions(user):
