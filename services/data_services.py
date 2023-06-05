@@ -50,8 +50,8 @@ def get_specific_version(urlname, major, minor):
         quest_bson = questionnaires.find({
             'urlname': urlname,
             'version.major': int(major),
-            'version.minor': int(minor),
-            'deleted_on': None
+            'version.minor': int(minor)
+#            'deleted_on': None
         }).next()
     logger.info(quest_bson['version'])
     logger.info("LANGUAGE: {}".format(quest_bson.get('language')))
