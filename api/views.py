@@ -69,6 +69,8 @@ def get_major_version(request, major, minor, q_name):
 
 @ensure_csrf_cookie
 def get_interview_version(request):
+    logger.info("Interview Hit: {}".format(request))
+
     ret = HttpResponse(content_type='application/json')
     q_name = request.GET.get('q')
     major = request.GET.get('major', 1)
@@ -91,10 +93,12 @@ def save_instrument(request, versiontype):
                                           instrument__instrument_id=payload['instrument_id'],
                                           instrument__major_version=payload['version']['major'])
         logger.debug('permissions {}'.format(perm.to_dict()))
+
+        logger.info("PERM: {}\nUSER: {}".format(perm, request.user.__dict__))
+
         if versiontype == 'minor':
             assert perm.owner or perm.write
-        # if versiontype == 'major':
-        # 	assert perm.read
+
     except (InstrumentAuth.DoesNotExist, AssertionError):
         return HttpResponse(status=403,
                             content="You can not modify a questionnaire that you do not have write access to.")
@@ -128,8 +132,17 @@ def save_instrument(request, versiontype):
 
 
 @ensure_csrf_cookie
-def delete_questionnaire_version(request, instrument_id):
+def delete_questionnaire_version(request, id, major, minor):
+    perm = InstrumentAuth.objects.get(user=request.user,
+                                      instrument__instrument_id=id,
+                                      instrument__major_version=major)
+
+    if not (perm.owner or perm.write):
+        return HttpResponse(status=403,
+                            content="You can not modify a questionnaire that you do not have write access to.")
+
     resp = HttpResponse(content_type='application/json')
-    ds.soft_delete_version(instrument_id)
-    resp.content = 'Deleted: ', instrument_id
+    ret = ds.soft_delete_version(id, major, minor)
+    logger.info("Response from db on delete op: {}".format(ret))
+    resp.content = 'Deleted: {}->{}:{}'.format(id, major, minor)
     return resp

@@ -97,7 +97,7 @@ app.directive('edaNav', ['$modal', 'InstrumentService', function($modal, iaservi
                 var params = {
                     q: iaservice.current.urlname,
                     major: iaservice.current.version.major,
-                    minor: iaservice.current.version.minor,
+                    minor: 'current', //iaservice.current.version.minor,
                     lang: iaservice.current.language.id,
                     debug: debug 
                 }

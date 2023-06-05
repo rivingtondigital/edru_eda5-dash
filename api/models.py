@@ -56,7 +56,6 @@ class EdaModel(object):
         ret = self._unbson(ret)
         return json.dumps(ret)
 
-
     @classmethod
     def fromstore(cls, js):
         ret = cls()
@@ -84,7 +83,6 @@ class EdaModel(object):
         if '_id' in bson and bson['_id'] != None:
             ret._id = str(bson['_id'])
         return ret
-
 
 
 class Version(EdaModel):
@@ -286,7 +284,7 @@ class Instrument(EdaModel):
 
 
 class DJ_Instrument(models.Model):
-    instrument_id = models.IntegerField()
+    instrument_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=512, null=True)
     shortname = models.CharField(max_length=512, null=True)
     major_version = models.IntegerField()

@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     # 'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-#    'django.contrib.messages',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
     'api_auth',
@@ -115,11 +115,23 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR + '/templates',],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages'
+            ]
+        },
+    },
+]
 
-
-TEMPLATE_DIRS = (
-	BASE_DIR + '/templates',
-)
+#TEMPLATE_DIRS = (
+#	BASE_DIR + '/templates',
+#)
 
 
 AUTHENTICATION_BACKENDS = (
