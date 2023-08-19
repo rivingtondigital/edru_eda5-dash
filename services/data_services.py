@@ -40,12 +40,15 @@ def get_specific_version(urlname, major, minor):
     logger.debug('Requesting {}: version {}.{}'.format(urlname, major, minor))
     questionnaires = client.dsm.questionnaires
     if minor == 'current':
-        quest_bson = questionnaires.find({
+        all_vs = questionnaires.find({
             'urlname': urlname,
             'version.major': int(major),
             'deleted_on': None
-        }, sort=[("version.minor", DESCENDING)]).next()
-
+        }, sort=[("version.minor", DESCENDING)])
+        if all_vs.count() > 0:
+            quest_bson = all_vs[0]
+        else:
+            quest_bson = None
     else:
         quest_bson = questionnaires.find({
             'urlname': urlname,
@@ -53,13 +56,14 @@ def get_specific_version(urlname, major, minor):
             'version.minor': int(minor)
 #            'deleted_on': None
         }).next()
-    logger.info(quest_bson['version'])
-    logger.info("LANGUAGE: {}".format(quest_bson.get('language')))
     if quest_bson != None:
+        logger.info(quest_bson['version'])
+        logger.info("LANGUAGE: {}".format(quest_bson.get('language')))
         if 'language' not in quest_bson:
             quest_bson['language'] = {'id': 'en'}
         return unbson(quest_bson)
     else:
+        logger.info("Nothing found for {}.{}.{}".format(urlname, major, minor))
         return None
 
 
