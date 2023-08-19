@@ -20,11 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '$b0+p#1icsm41_)i+jcto7f_h^*@rkl#-g#(0z%!q1nb!c834v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'interview.eda5.org',
+]
 
 
 # Application definition
@@ -36,7 +38,7 @@ INSTALLED_APPS = (
     # 'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-#    'django.contrib.messages',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
     'api_auth',
@@ -113,11 +115,23 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR + '/templates',],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages'
+            ]
+        },
+    },
+]
 
-
-TEMPLATE_DIRS = (
-	BASE_DIR + '/templates',
-)
+#TEMPLATE_DIRS = (
+#	BASE_DIR + '/templates',
+#)
 
 
 AUTHENTICATION_BACKENDS = (

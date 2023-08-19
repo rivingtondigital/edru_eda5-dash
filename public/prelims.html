@@ -25,6 +25,19 @@
 					{{card.version.major}}.{{card.version.minor}}
 				</span>
 			</div>
+			<div class='row formrow'>
+				<label class='col-sm-3'>language</label>
+
+
+				<span class='col-sm-9'>
+					<select name="repeatSelect" id="repeatSelect"
+							ng-model="card.language"
+							ng-options="option.name for option in language_options track by option.id"
+							style="margin:8px">
+					</select>
+				</span>
+			</div>
+
 			<div>
 				<button type='button' class='btn btn-default btn-sm'
 					style='margin-left:10px;float:right;'
