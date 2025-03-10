@@ -42,7 +42,7 @@ pkg-resources==0.0.0
 ply==3.4
 prometheus-client==0.12.0
 ptyprocess==0.5
-Pygments==2.5.2
+Pygments==2.7.4
 pymongo==3.1.1
 pyparsing==2.2.0
 python-dateutil==2.8.2
