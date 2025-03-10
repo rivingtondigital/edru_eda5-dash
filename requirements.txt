@@ -6,7 +6,7 @@ chardet==4.0.0
 colorama==0.2.5
 cors-python==0.0.1
 decorator==4.0.4
-Django==1.11.28
+Django==2.2.28
 django-appconf==1.0.1
 django-cors==0.1
 django-cors-headers==1.1.0
